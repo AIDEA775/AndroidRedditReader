@@ -1,8 +1,8 @@
 package famaf.unc.edu.ar.activitiesassignment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 public class NewsActivity extends AppCompatActivity {
+    private static final int PICK_LOGIN_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +36,24 @@ public class NewsActivity extends AppCompatActivity {
         if (id == R.id.action_sign_in) {
             NewsActivityFragment newsfragment = (NewsActivityFragment)
                     getSupportFragmentManager().findFragmentById(R.id.news_activity_fragment_id);
-            TextView textView = (TextView) findViewById(R.id.loginStatusTextView);
-            textView.setText("User XXXX logged in");
+
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivityForResult(i, PICK_LOGIN_REQUEST);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_LOGIN_REQUEST) {
+            if(resultCode == Activity.RESULT_OK){
+                String user = data.getStringExtra("user");
+
+                TextView textView = (TextView) findViewById(R.id.loginStatusTextView);
+                textView.setText(String.format("User %s logged in", user));
+            }
+        }
     }
 }
