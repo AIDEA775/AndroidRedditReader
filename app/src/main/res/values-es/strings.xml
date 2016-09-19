@@ -2,12 +2,12 @@
     <string name="app_name">Lector de Reddit</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Correo</string>
+    <string name="prompt_email">Correo electrónico</string>
     <string name="prompt_password">Contraseña (opcional)</string>
     <string name="action_sign_in">Registrarse</string>
     <string name="action_sign_in_short">Ingresa</string>
     <string name="action_sign_out">Desconectar</string>
-    <string name="error_invalid_email">Correo invalido</string>
+    <string name="error_invalid_email">Correo electrónico inválido</string>
     <string name="error_invalid_password">Contraseña muy corta</string>
     <string name="error_incorrect_password">Contraseña incorrecta</string>
     <string name="error_field_required">Campo requerido</string>
