@@ -1,4 +1,4 @@
-package famaf.unc.edu.ar.redditreader;
+package ar.edu.unc.famaf.redditreader;
 
 import android.app.Activity;
 import android.content.Intent;
