@@ -1,111 +1,26 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/news_activity_fragment_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ar.edu.unc.famaf.redditreader.NewsActivityFragment"
-    tools:showIn="@layout/activity_news">
-
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/post_image"
-        android:src="@drawable/reddit_post"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/post_arrow" />
+    tools:showIn="@layout/activity_news"
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="r/todayilearnerd"
-        android:id="@+id/post_text_sub"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/post_text_time"
-        android:layout_toStartOf="@+id/post_text_time"
-        android:layout_alignLeft="@+id/post_text_title"
-        android:layout_alignStart="@+id/post_text_title" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Hace 4h"
-        android:id="@+id/post_text_time"
-        android:layout_alignBottom="@+id/post_text_sub"
-        android:layout_alignRight="@+id/post_text_title"
-        android:layout_alignEnd="@+id/post_text_title" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec"
-        android:id="@+id/post_text_title"
-        android:layout_below="@+id/post_text_sub"
-        android:layout_toRightOf="@+id/post_image"
-        android:layout_toEndOf="@+id/post_image"
-        android:layout_toLeftOf="@+id/post_arrow"
-        android:layout_toStartOf="@+id/post_arrow" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:id="@+id/post_arrow"
-        android:src="@drawable/ic_arrow_right"
-        android:background="?android:selectableItemBackground"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/post_comment" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/post_comment"
-        android:src="@drawable/ic_question_answer"
-        android:background="?android:selectableItemBackground"
-        android:contentDescription="Coment"
-        android:layout_below="@+id/post_text_title"
-        android:layout_toRightOf="@+id/post_image"
-        android:layout_toEndOf="@+id/post_image" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="2112 comentarios"
-        android:id="@+id/post_text_comments"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:layout_alignTop="@+id/post_comment"
-        android:layout_toRightOf="@+id/post_comment"
-        android:layout_toEndOf="@+id/post_comment"
-        android:layout_alignBottom="@+id/post_arrow"
-        android:layout_alignRight="@+id/post_text_title"
-        android:layout_alignEnd="@+id/post_text_title" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
         android:text="No user logged yet"
         android:id="@+id/loginStatusTextView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:gravity="center_horizontal"/>
 
-</RelativeLayout>
+    <ListView
+        android:id="@+id/posts_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
+</LinearLayout>
