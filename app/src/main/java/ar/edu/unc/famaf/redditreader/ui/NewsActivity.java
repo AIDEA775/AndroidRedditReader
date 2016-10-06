@@ -1,4 +1,4 @@
-package ar.edu.unc.famaf.redditreader;
+package ar.edu.unc.famaf.redditreader.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import ar.edu.unc.famaf.redditreader.model.PostAdapter;
+import ar.edu.unc.famaf.redditreader.model.PostModel;
+import ar.edu.unc.famaf.redditreader.R;
+
 
 public class NewsActivity extends AppCompatActivity {
     private static final int PICK_LOGIN_REQUEST = 1;
@@ -83,9 +88,6 @@ public class NewsActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_sign_in) {
-            NewsActivityFragment newsfragment = (NewsActivityFragment)
-                    getSupportFragmentManager().findFragmentById(R.id.news_activity_fragment_id);
-
             Intent i = new Intent(this, LoginActivity.class);
             startActivityForResult(i, PICK_LOGIN_REQUEST);
             return true;

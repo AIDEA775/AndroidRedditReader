@@ -1,4 +1,4 @@
-package ar.edu.unc.famaf.redditreader;
+package ar.edu.unc.famaf.redditreader.model;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import java.util.List;
 import java.util.Locale;
+
+import ar.edu.unc.famaf.redditreader.R;
+
 
 public class PostAdapter extends ArrayAdapter<PostModel>{
     private List<PostModel> list = null;
