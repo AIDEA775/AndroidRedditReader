@@ -11,10 +11,8 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import ar.edu.unc.famaf.redditreader.model.PostAdapter;
-import ar.edu.unc.famaf.redditreader.model.PostModel;
+import ar.edu.unc.famaf.redditreader.backend.Backend;
 import ar.edu.unc.famaf.redditreader.R;
 
 
@@ -28,49 +26,8 @@ public class NewsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        PostModel post1 = new PostModel();
-        post1.setTextSub("sratra");
-        post1.setTextTitle("titulo asrtatsatsra");
-        post1.setTextTime("8h");
-        post1.setImage(R.drawable.reddit_post);
-        post1.setComments(3);
-
-        PostModel post2 = new PostModel();
-        post2.setTextSub("/stasratra");
-        post2.setTextTitle("titsartsraulo asrtatsatsra");
-        post2.setTextTime("2h");
-        post2.setImage(R.drawable.reddit_post);
-        post2.setComments(654);
-
-        PostModel post3 = new PostModel();
-        post3.setTextSub("/stastsraratra");
-        post3.setTextTitle("tittsasartsraulo asrtatsatsra");
-        post3.setTextTime("6h");
-        post3.setImage(R.drawable.reddit_post);
-        post3.setComments(654);
-
-        PostModel post4 = new PostModel();
-        post4.setTextSub("/stasratra");
-        post4.setTextTitle("titsartsrautsratslo asrtatsatsra");
-        post4.setTextTime("4h");
-        post4.setImage(R.drawable.reddit_post);
-        post4.setComments(54);
-
-        PostModel post5 = new PostModel();
-        post5.setTextSub("/sttrsaasratra");
-        post5.setTextTitle("titsartsrsatsautsratslo asrtattsratrssatsra");
-        post5.setTextTime("44h");
-        post5.setImage(R.drawable.reddit_post);
-        post5.setComments(54332);
-
-        ArrayList<PostModel> list = new ArrayList<>();
-        list.add(post1);
-        list.add(post2);
-        list.add(post3);
-        list.add(post4);
-        list.add(post5);
-
-        PostAdapter adapter = new PostAdapter(this, R.layout.post_news, list);
+        Backend mBackend = Backend.getInstance();
+        PostAdapter adapter = new PostAdapter(this, R.layout.post_news, mBackend.getTopPosts());
 
         ListView listView = (ListView) findViewById(R.id.posts_list);
         listView.setAdapter(adapter);

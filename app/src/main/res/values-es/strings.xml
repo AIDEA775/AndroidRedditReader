@@ -14,6 +14,7 @@
     <string name="permission_rationale">"Se necesitan permisos de contactos para proporcionar
         terminaciones de correo electrónico."
     </string>
+    <string name="coments_post">comentarios</string>
 
     <string name="title_activity_news">Novedades</string>
 
