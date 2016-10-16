@@ -1,103 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin">
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
+    <RelativeLayout
+        android:id="@+id/image_layout"
+        android:layout_width="48dp"
+        android:layout_height="48dp">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/post_image"
-        android:src="@drawable/reddit_post"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/post_arrow" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/post_image"
+            tools:src="@drawable/reddit_post"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        tools:text="r/todayilearnerd"
-        android:id="@+id/post_text_sub"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/post_text_time"
-        android:layout_toStartOf="@+id/post_text_time"
-        android:layout_alignLeft="@+id/post_text_title"
-        android:layout_alignStart="@+id/post_text_title" />
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:indeterminate="true"
+            android:visibility="visible"
+            android:id="@+id/post_image_progressbar" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        tools:text="Hace 4h"
-        android:id="@+id/post_text_time"
-        android:layout_alignBottom="@+id/post_text_sub"
-        android:layout_alignRight="@+id/post_text_title"
-        android:layout_alignEnd="@+id/post_text_title" />
+    </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec"
-        android:id="@+id/post_text_title"
-        android:layout_below="@+id/post_text_sub"
-        android:layout_toRightOf="@+id/post_image"
-        android:layout_toEndOf="@+id/post_image"
-        android:layout_toLeftOf="@+id/post_arrow"
-        android:layout_toStartOf="@+id/post_arrow" />
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
         android:id="@+id/post_arrow"
         android:src="@drawable/ic_arrow_right"
         android:background="?android:selectableItemBackground"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/post_comment" />
+        android:layout_alignBottom="@+id/post_layout" />
 
-    <ImageButton
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/post_comment"
-        android:src="@drawable/ic_question_answer"
-        android:background="?android:selectableItemBackground"
-        tools:contentDescription="Coment"
-        android:layout_below="@+id/post_text_title"
-        android:layout_toRightOf="@+id/post_image"
-        android:layout_toEndOf="@+id/post_image" />
+        android:paddingRight="12dp"
+        android:paddingLeft="12dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/post_layout"
+        android:layout_toLeftOf="@+id/post_arrow"
+        android:layout_toStartOf="@+id/post_arrow"
+        android:layout_toRightOf="@+id/image_layout"
+        android:layout_toEndOf="@+id/image_layout">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        tools:text="2112 comentarios"
-        android:id="@+id/post_text_comments"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:layout_alignTop="@+id/post_comment"
-        android:layout_toRightOf="@+id/post_comment"
-        android:layout_toEndOf="@+id/post_comment"
-        android:layout_alignBottom="@+id/post_arrow"
-        android:layout_alignRight="@+id/post_text_title"
-        android:layout_alignEnd="@+id/post_text_title" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            tools:text="r/todayilearnerd"
+            android:id="@+id/post_text_sub"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/post_text_title"
+            android:layout_alignStart="@+id/post_text_title"
+            android:layout_toLeftOf="@+id/post_text_time"
+            android:layout_toStartOf="@+id/post_text_time" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec"
+            android:id="@+id/post_text_title"
+            android:layout_below="@+id/post_text_sub"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center"
+            android:id="@+id/post_comments"
+            android:drawableLeft="@drawable/ic_question_answer"
+            android:drawableStart="@drawable/ic_question_answer"
+            android:background="?android:selectableItemBackground"
+            android:drawablePadding="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            tools:text="2112 comentarios"
+            tools:contentDescription="Coment"
+            android:layout_below="@+id/post_text_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            tools:text="Hace 4h"
+            android:id="@+id/post_text_time"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

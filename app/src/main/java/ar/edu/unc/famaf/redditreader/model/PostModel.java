@@ -1,11 +1,13 @@
 package ar.edu.unc.famaf.redditreader.model;
 
 
+import java.net.URL;
+
 public class PostModel {
     private String textSub;
     private String textTitle;
     private String textTime;
-    private int imageId;
+    private URL imageSrc;
     private int comments;
 
     public void setTextSub(String textSub) {
@@ -32,12 +34,12 @@ public class PostModel {
         return this.textTime;
     }
 
-    public void setImage(int imageId) {
-        this.imageId = imageId;
+    public void setImageSrc(URL image) {
+        this.imageSrc = image;
     }
 
-    public int getImageId() {
-        return this.imageId;
+    public URL getImageSrc() {
+        return this.imageSrc;
     }
 
     public void setComments(int comments) {

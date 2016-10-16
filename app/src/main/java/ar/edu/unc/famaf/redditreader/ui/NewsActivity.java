@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.net.MalformedURLException;
+
 import ar.edu.unc.famaf.redditreader.model.PostAdapter;
 import ar.edu.unc.famaf.redditreader.backend.Backend;
 import ar.edu.unc.famaf.redditreader.R;
@@ -27,7 +29,13 @@ public class NewsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Backend mBackend = Backend.getInstance();
-        PostAdapter adapter = new PostAdapter(this, R.layout.post_news, mBackend.getTopPosts());
+
+        PostAdapter adapter = null;
+        try {
+            adapter = new PostAdapter(this, R.layout.post_news, mBackend.getTopPosts());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         ListView listView = (ListView) findViewById(R.id.posts_list);
         listView.setAdapter(adapter);
