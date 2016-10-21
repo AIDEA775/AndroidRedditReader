@@ -15,8 +15,11 @@
         terminaciones de correo electrónico."
     </string>
     <string name="coments_post">comentarios</string>
+    <string name="no_user_logged">Ningún usuario registrado</string>
 
     <string name="title_activity_news">Novedades</string>
 
+    <string name="post_image_info">Imagen del post</string>
+    <string name="post_arrow_info">Ver post</string>
 
 </resources>

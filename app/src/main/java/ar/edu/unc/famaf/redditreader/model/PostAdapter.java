@@ -72,11 +72,9 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ViewHolder holder;
 
-        if (convertView == null) {
-            convertView = ((LayoutInflater) getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.post_news, null);
-        }
+        if (convertView == null) convertView = ((LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.post_news, parent, false);
 
         if (convertView.getTag() == null) {
             holder = new ViewHolder();

@@ -15,9 +15,13 @@
         completions."
     </string>
     <string name="coments_post">comments</string>
+    <string name="no_user_logged">No user logged yet</string>
 
     <string name="title_activity_news">"News"
     </string>
+
+    <string name="post_image_info">Post image</string>
+    <string name="post_arrow_info">View post</string>
 
 
 </resources>

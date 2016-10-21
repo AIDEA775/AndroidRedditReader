@@ -22,7 +22,8 @@
             android:padding="8dp"
             android:scaleType="centerInside"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/post_image_info"/>
 
         <ProgressBar
             style="@style/Widget.AppCompat.ProgressBar"
@@ -47,7 +48,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/post_layout" />
+        android:layout_alignBottom="@+id/post_layout"
+        android:contentDescription="@string/post_arrow_info"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
