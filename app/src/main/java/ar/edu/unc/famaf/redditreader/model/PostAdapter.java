@@ -48,7 +48,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         TextView textTime;
         ImageView imageSrc;
         TextView comments;
-        LoadImage thread;
+        LoadImageAsyncTask thread;
         ProgressBar progressBar;
     }
 
@@ -76,7 +76,9 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
             convertView = ((LayoutInflater) getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                     .inflate(R.layout.post_news, null);
+        }
 
+        if (convertView.getTag() == null) {
             holder = new ViewHolder();
             holder.textSub = (TextView) convertView.findViewById(R.id.post_text_sub);
             holder.textTitle = (TextView) convertView.findViewById(R.id.post_text_title);
@@ -90,6 +92,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
             holder = (ViewHolder) convertView.getTag();
             if (holder.thread != null) {
                 holder.thread.setImage = false;
+                holder.thread = null;
             }
         }
 
@@ -110,7 +113,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
             Log.i("Post Adapter: Cache", "Search fail " + post.getImageSrc().toString());
             holder.progressBar.setVisibility(View.VISIBLE);
             holder.imageSrc.setImageResource(android.R.color.transparent);
-            holder.thread = new LoadImage(holder.imageSrc, holder.progressBar);
+            holder.thread = new LoadImageAsyncTask(holder.imageSrc, holder.progressBar);
             holder.thread.execute(post.getImageSrc());
         }
         return convertView;
@@ -127,12 +130,12 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         return mMemoryCache.get(key);
     }
 
-    private class LoadImage extends AsyncTask<URL, Void, Bitmap> {
+    private class LoadImageAsyncTask extends AsyncTask<URL, Void, Bitmap> {
         private ImageView imageView;
         private ProgressBar progressBar;
         boolean setImage;
 
-        LoadImage(ImageView imageView, ProgressBar progressBar){
+        LoadImageAsyncTask(ImageView imageView, ProgressBar progressBar){
             this.imageView = imageView;
             this.progressBar = progressBar;
         }
@@ -160,7 +163,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
 
         @Override
         protected void onPostExecute(Bitmap param) {
-            if (setImage) {
+            if (setImage && param != null) {
                 imageView.setImageBitmap(param);
                 progressBar.setVisibility(View.GONE);
             }
