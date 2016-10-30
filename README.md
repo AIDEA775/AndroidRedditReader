@@ -100,9 +100,20 @@ nueva clase llamada `ar.edu.unc.famaf.redditreader.model.Listing` (acorde a la e
     public Listing readJsonStream(InputStream in) throws IOException {....}
 ```
 
+### Tips
+
+* La documentación oficial de la API de Reddit está disponible en [Reddit API](https://www.reddit.com/dev/api/)
+* Para realizar una llamada REST HTTP (GET) puede emplear el siguiente snippet de código
+```Java
+    HttpURLConnection conn = (HttpURLConnection) new URL("...").openConnection();
+    conn.setRequestMethod("GET");
+    conn.getInputStream();
+```
+
 
 ## Condiciones generales de entrega
 
+* **No deben emplearse frameworks que no sean los provistos oficialmente por la SDK de Android**
 * Se debe trabajar en un repositorio GIT propio. Mayor información en:
 [Git-Basics-Working-with-Remotes](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes)
 * La entrega consistirá en indicar en que TAG fue subido el mismo 

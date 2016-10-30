@@ -4,23 +4,23 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp">
 
     <RelativeLayout
         android:id="@+id/image_layout"
-        android:layout_width="48dp"
-        android:layout_height="48dp">
+        android:layout_width="64dp"
+        android:layout_height="64dp">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/post_image"
             tools:src="@drawable/reddit_post"
-            android:padding="8dp"
-            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:scaleType="centerCrop"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/post_image_info"/>
@@ -29,7 +29,7 @@
             style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp"
+            android:padding="4dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:indeterminate="true"
@@ -40,8 +40,8 @@
 
 
     <ImageButton
-        android:layout_width="48dp"
-        android:layout_height="match_parent"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
         android:id="@+id/post_arrow"
         android:src="@drawable/ic_arrow_right"
         android:background="?android:selectableItemBackground"
@@ -54,8 +54,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="12dp"
-        android:paddingLeft="12dp"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
         android:layout_alignParentTop="true"
         android:id="@+id/post_layout"
         android:layout_toLeftOf="@+id/post_arrow"
@@ -66,7 +66,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             tools:text="r/todayilearnerd"
             android:id="@+id/post_text_sub"
             android:layout_alignParentTop="true"
@@ -78,7 +78,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec"
             android:id="@+id/post_text_title"
             android:layout_below="@+id/post_text_sub"
@@ -87,17 +87,18 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
-
         <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:gravity="start|center"
             android:id="@+id/post_comments"
             android:drawableLeft="@drawable/ic_question_answer"
             android:drawableStart="@drawable/ic_question_answer"
             android:background="?android:selectableItemBackground"
             android:drawablePadding="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             tools:text="2112 comentarios"
             tools:contentDescription="Coment"
             android:layout_below="@+id/post_text_title" />
@@ -105,7 +106,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             tools:text="Hace 4h"
             android:id="@+id/post_text_time"
             android:layout_alignParentTop="true"
