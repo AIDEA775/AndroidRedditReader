@@ -1,52 +1,95 @@
 package ar.edu.unc.famaf.redditreader.model;
 
 
-import java.net.URL;
-
 public class PostModel {
-    private String textSub;
-    private String textTitle;
-    private String textTime;
-    private URL imageSrc;
-    private int comments;
+    private String domain;
+    private String subreddit;
+    private String id;
+    private String author;
+    private String thumbnail;
+    private String url;
+    private String title;
+    private long created_utc;
+    private int num_comments;
+    private int ups;
 
-    public void setTextSub(String textSub) {
-        this.textSub = textSub;
+    public String getDomain() {
+        return domain;
     }
 
-    public String getTextSub() {
-        return this.textSub;
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 
-    public void setTextTitle(String textTitle) {
-        this.textTitle = textTitle;
+    public String getSubreddit() {
+        return subreddit;
     }
 
-    public String getTextTitle() {
-        return this.textTitle;
+    public void setSubreddit(String subreddit) {
+        this.subreddit = subreddit;
     }
 
-    public void setTextTime(String textTime) {
-        this.textTime = textTime;
+    public String getId() {
+        return id;
     }
 
-    public String getTextTime() {
-        return this.textTime;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setImageSrc(URL image) {
-        this.imageSrc = image;
+    public String getAuthor() {
+        return author;
     }
 
-    public URL getImageSrc() {
-        return this.imageSrc;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public void setComments(int comments) {
-        this.comments = comments;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public int getComments() {
-        return this.comments;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public long getCreatedUtc() {
+        return created_utc;
+    }
+
+    public void setCreatedUtc(long created_utc) {
+        this.created_utc = created_utc;
+    }
+
+    public int getNumComments() {
+        return num_comments;
+    }
+
+    public void setNum_comments(int num_comments) {
+        this.num_comments = num_comments;
+    }
+
+    public int getUps() {
+        return ups;
+    }
+
+    public void setUps(int ups) {
+        this.ups = ups;
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,9 +31,9 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
     private List<PostModel> list = null;
     private LruCache<String, Bitmap> mMemoryCache;
 
-    public PostAdapter(Context context, int textViewResourceId, List<PostModel> postsList) {
+    public PostAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
-        this.list = postsList;
+        this.list = new ArrayList<>();
 
         final int cacheSize = (int) ((Runtime.getRuntime().maxMemory() / 1024) / 8) ;
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
@@ -42,13 +44,17 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         };
     }
 
+    public void swapList(List<PostModel> list) {
+        this.list = list;
+    }
+
     private static class ViewHolder {
         TextView textSub;
         TextView textTitle;
         TextView textTime;
         ImageView imageSrc;
         TextView comments;
-        LoadImageAsyncTask thread;
+        LoadImageTask thread;
         ProgressBar progressBar;
     }
 
@@ -96,23 +102,45 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
 
         PostModel post = list.get(position);
 
-        holder.textSub.setText(post.getTextSub());
-        holder.textTitle.setText(post.getTextTitle());
-        holder.textTime.setText(post.getTextTime());
-        holder.comments.setText(String.format(Locale.US, "%d " +
-                getContext().getString(R.string.coments_post), post.getComments()));
+        holder.textSub.setText(String.format(Locale.US, "/r/%s", post.getSubreddit()));
+        holder.textTitle.setText(post.getTitle());
 
-        final Bitmap bitmap = getBitmapFromCache(post.getImageSrc().toString());
-        if (bitmap != null) {
-            Log.i("Post Adapter: Cache", "Find " + post.getImageSrc().toString());
-            holder.progressBar.setVisibility(View.GONE);
-            holder.imageSrc.setImageBitmap(bitmap);
-        } else {
-            Log.i("Post Adapter: Cache", "Search fail " + post.getImageSrc().toString());
-            holder.progressBar.setVisibility(View.VISIBLE);
-            holder.imageSrc.setImageResource(android.R.color.transparent);
-            holder.thread = new LoadImageAsyncTask(holder.imageSrc, holder.progressBar);
-            holder.thread.execute(post.getImageSrc());
+        holder.textTime.setText(
+                DateUtils.getRelativeTimeSpanString(post.getCreatedUtc() * 1000,
+                        System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS));
+
+        holder.comments.setText(String.format(Locale.US, "%d " +
+                getContext().getString(R.string.coments_post), post.getNumComments()));
+
+        switch (post.getThumbnail()) {
+            case "default":
+                holder.progressBar.setVisibility(View.GONE);
+                holder.imageSrc.setImageResource(R.drawable.reddit_default);
+                break;
+            case "self":
+                holder.progressBar.setVisibility(View.GONE);
+                holder.imageSrc.setImageResource(R.drawable.reddit_self);
+                break;
+            case "image":
+                holder.progressBar.setVisibility(View.GONE);
+                holder.imageSrc.setImageResource(R.drawable.reddit_image);
+                break;
+            case "nsfw":
+                holder.progressBar.setVisibility(View.GONE);
+                holder.imageSrc.setImageResource(R.drawable.reddit_nsfw);
+                break;
+            default:
+                final Bitmap bitmap = getBitmapFromCache(post.getThumbnail());
+                if (bitmap != null) {
+                    holder.progressBar.setVisibility(View.GONE);
+                    holder.imageSrc.setImageBitmap(bitmap);
+                } else {
+                    holder.progressBar.setVisibility(View.VISIBLE);
+                    holder.imageSrc.setImageResource(android.R.color.transparent);
+                    holder.thread = new LoadImageTask(holder.imageSrc, holder.progressBar);
+                    holder.thread.execute(post.getThumbnail());
+                }
+                break;
         }
         return convertView;
     }
@@ -128,12 +156,12 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         return mMemoryCache.get(key);
     }
 
-    private class LoadImageAsyncTask extends AsyncTask<URL, Void, Bitmap> {
+    private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
         private ImageView imageView;
         private ProgressBar progressBar;
         boolean setImage;
 
-        LoadImageAsyncTask(ImageView imageView, ProgressBar progressBar){
+        LoadImageTask(ImageView imageView, ProgressBar progressBar){
             this.imageView = imageView;
             this.progressBar = progressBar;
         }
@@ -144,14 +172,15 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         }
 
         @Override
-        protected Bitmap doInBackground(URL... params) {
+        protected Bitmap doInBackground(String... params) {
             try {
-                HttpURLConnection connection = (HttpURLConnection) params[0].openConnection();
+                URL url = new URL(params[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(input);
-                addBitmapToCache(String.valueOf(params[0].toString()), bitmap);
+                addBitmapToCache(String.valueOf(params[0]), bitmap);
                 return bitmap;
             } catch (IOException e) {
                 e.printStackTrace();

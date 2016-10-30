@@ -22,6 +22,8 @@
 
     <string name="post_image_info">Post image</string>
     <string name="post_arrow_info">View post</string>
+    <string name="no_connection_msg">Check your network settings</string>
+    <string name="no_connection_title">You are offline</string>
 
 
 </resources>
