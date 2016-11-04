@@ -111,6 +111,37 @@ nueva clase llamada `ar.edu.unc.famaf.redditreader.model.Listing` (acorde a la e
 ```
 
 
+## Step 6
+
+### Objetivos
+
+* Implementar una pequeña base de datos SQLite
+
+### Enunciado
+
+1. La clase `ar.edu.unc.famaf.redditreader.backend.GetTopPostsTask` debe implementar ahora el siguiente comportamiento
+ 1. Invocar al servicio REST de Reddit para obtener los primeros 50 TOP posts
+ 2. Persistir los resultados en una base de datos interna
+ 3. Devolver los resultados desde la base de datos interna
+ 4. En caso de que no haya conexión a internet, se deben devolver los últimos resultados obtenidos desde la base de datos interna
+2. La base de datos interna debe estar implementada en una nueva clase: `ar.edu.unc.famaf.redditreader.backend.RedditDBHelper` de tipo `SQLiteOpenHelper`
+ * Solo almacena los últimos 50 posts. El resto deben borrarse.
+3. Los _thumbnails/preview_ a medida que se descargan deben también almacenarse. Recordar que pueden almacenarse como un arreglo de bytes:
+
+```Java
+   public static byte[] getBytes(Bitmap bitmap)
+   {
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        bitmap.compress(CompressFormat.JPEG,0, stream);
+        return stream.toByteArray();
+   }
+   public static Bitmap getImage(byte[] image)
+   {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+   }
+```
+
+
 ## Condiciones generales de entrega
 
 * **No deben emplearse frameworks que no sean los provistos oficialmente por la SDK de Android**
