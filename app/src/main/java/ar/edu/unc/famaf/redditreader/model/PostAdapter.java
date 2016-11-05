@@ -49,13 +49,13 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
     }
 
     private static class ViewHolder {
-        TextView textSub;
-        TextView textTitle;
-        TextView textTime;
-        ImageView imageSrc;
+        TextView subreddit;
+        TextView title;
+        TextView created_utc;
+        ImageView thumbnail;
         TextView comments;
         LoadImageTask thread;
-        ProgressBar progressBar;
+        ProgressBar progress;
     }
 
     @Override
@@ -84,12 +84,12 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
 
         if (convertView.getTag() == null) {
             holder = new ViewHolder();
-            holder.textSub = (TextView) convertView.findViewById(R.id.post_text_sub);
-            holder.textTitle = (TextView) convertView.findViewById(R.id.post_text_title);
-            holder.textTime = (TextView) convertView.findViewById(R.id.post_text_time);
-            holder.comments = (TextView) convertView.findViewById(R.id.post_comments);
-            holder.imageSrc = (ImageView) convertView.findViewById(R.id.post_image);
-            holder.progressBar = (ProgressBar) convertView.findViewById(R.id.post_image_progressbar);
+            holder.subreddit = (TextView) convertView.findViewById(R.id.post_item_subreddit);
+            holder.title = (TextView) convertView.findViewById(R.id.post_item_title);
+            holder.created_utc = (TextView) convertView.findViewById(R.id.post_item_created_utc);
+            holder.comments = (TextView) convertView.findViewById(R.id.post_item_comments);
+            holder.thumbnail = (ImageView) convertView.findViewById(R.id.post_item_thumbnail);
+            holder.progress = (ProgressBar) convertView.findViewById(R.id.post_item_progressbar);
 
             convertView.setTag(holder);
         } else {
@@ -102,42 +102,36 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
 
         PostModel post = list.get(position);
 
-        holder.textSub.setText(String.format(Locale.US, "/r/%s", post.getSubreddit()));
-        holder.textTitle.setText(post.getTitle());
-
-        holder.textTime.setText(
+        holder.title.setText(post.getTitle());
+        holder.subreddit.setText(String.format(Locale.US, "/r/%s", post.getSubreddit()));
+        holder.created_utc.setText(
                 DateUtils.getRelativeTimeSpanString(post.getCreatedUtc() * 1000,
                         System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS));
-
         holder.comments.setText(String.format(Locale.US, "%d " +
                 getContext().getString(R.string.coments_post), post.getNumComments()));
 
+        holder.progress.setVisibility(View.GONE);
         switch (post.getThumbnail()) {
             case "default":
-                holder.progressBar.setVisibility(View.GONE);
-                holder.imageSrc.setImageResource(R.drawable.reddit_default);
+                holder.thumbnail.setImageResource(R.drawable.reddit_default);
                 break;
             case "self":
-                holder.progressBar.setVisibility(View.GONE);
-                holder.imageSrc.setImageResource(R.drawable.reddit_self);
+                holder.thumbnail.setImageResource(R.drawable.reddit_self);
                 break;
             case "image":
-                holder.progressBar.setVisibility(View.GONE);
-                holder.imageSrc.setImageResource(R.drawable.reddit_image);
+                holder.thumbnail.setImageResource(R.drawable.reddit_image);
                 break;
             case "nsfw":
-                holder.progressBar.setVisibility(View.GONE);
-                holder.imageSrc.setImageResource(R.drawable.reddit_nsfw);
+                holder.thumbnail.setImageResource(R.drawable.reddit_nsfw);
                 break;
             default:
                 final Bitmap bitmap = getBitmapFromCache(post.getThumbnail());
                 if (bitmap != null) {
-                    holder.progressBar.setVisibility(View.GONE);
-                    holder.imageSrc.setImageBitmap(bitmap);
+                    holder.thumbnail.setImageBitmap(bitmap);
                 } else {
-                    holder.progressBar.setVisibility(View.VISIBLE);
-                    holder.imageSrc.setImageResource(android.R.color.transparent);
-                    holder.thread = new LoadImageTask(holder.imageSrc, holder.progressBar);
+                    holder.progress.setVisibility(View.VISIBLE);
+                    holder.thumbnail.setImageResource(android.R.color.transparent);
+                    holder.thread = new LoadImageTask(holder.thumbnail, holder.progress);
                     holder.thread.execute(post.getThumbnail());
                 }
                 break;

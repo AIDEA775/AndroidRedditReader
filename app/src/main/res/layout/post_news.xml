@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/post_image"
+            android:id="@+id/post_item_thumbnail"
             tools:src="@drawable/reddit_post"
             android:padding="4dp"
             android:scaleType="centerCrop"
@@ -34,7 +34,7 @@
             android:layout_centerHorizontal="true"
             android:indeterminate="true"
             android:visibility="visible"
-            android:id="@+id/post_image_progressbar" />
+            android:id="@+id/post_item_progressbar" />
 
     </RelativeLayout>
 
@@ -68,20 +68,20 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             tools:text="r/todayilearnerd"
-            android:id="@+id/post_text_sub"
+            android:id="@+id/post_item_subreddit"
             android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/post_text_title"
-            android:layout_alignStart="@+id/post_text_title"
-            android:layout_toLeftOf="@+id/post_text_time"
-            android:layout_toStartOf="@+id/post_text_time" />
+            android:layout_alignLeft="@+id/post_item_title"
+            android:layout_alignStart="@+id/post_item_title"
+            android:layout_toLeftOf="@+id/post_item_created_utc"
+            android:layout_toStartOf="@+id/post_item_created_utc" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec"
-            android:id="@+id/post_text_title"
-            android:layout_below="@+id/post_text_sub"
+            android:id="@+id/post_item_title"
+            android:layout_below="@+id/post_item_subreddit"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
@@ -93,7 +93,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:gravity="start|center"
-            android:id="@+id/post_comments"
+            android:id="@+id/post_item_comments"
             android:drawableLeft="@drawable/ic_question_answer"
             android:drawableStart="@drawable/ic_question_answer"
             android:background="?android:selectableItemBackground"
@@ -101,14 +101,14 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             tools:text="2112 comentarios"
             tools:contentDescription="Coment"
-            android:layout_below="@+id/post_text_title" />
+            android:layout_below="@+id/post_item_title" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             tools:text="Hace 4h"
-            android:id="@+id/post_text_time"
+            android:id="@+id/post_item_created_utc"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
