@@ -13,17 +13,20 @@ import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.model.Child;
 import ar.edu.unc.famaf.redditreader.model.Listing;
-import ar.edu.unc.famaf.redditreader.model.PostAdapter;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class GetTopPostsTask extends AsyncTask<Void, Void, List<PostModel>> {
     private Parser parser;
-    private PostAdapter adapter;
+    private GetTopPostsListener listener;
 
-    GetTopPostsTask(PostAdapter adapter) {
+    interface GetTopPostsListener {
+        void onReceivePosts(List<PostModel> postModels);
+    }
+
+    GetTopPostsTask(GetTopPostsListener listener) {
         this.parser = new Parser();
-        this.adapter = adapter;
+        this.listener = listener;
     }
 
     @Override
@@ -58,8 +61,7 @@ public class GetTopPostsTask extends AsyncTask<Void, Void, List<PostModel>> {
     @Override
     protected void onPostExecute(List<PostModel> param) {
         if (param != null) {
-            adapter.swapList(param);
-            adapter.notifyDataSetChanged();
+            listener.onReceivePosts(param);
         }
     }
 }
