@@ -55,7 +55,7 @@ El mismo debe devolver siempre 5 instancias de `PostModel` con contenido falso o
 4. Crear la clase `ar.edu.unc.famaf.redditreader.ui.PostAdapter` que extienda de `android.widget.ArrayAdapter` e
  re-implementar los métodos necesarios
 5. `NewsActivityFragment` debe mostrar una [ListView](https://developer.android.com/reference/android/widget/ListView)
-que ocupe todo su espacio y debe desplegar el contenido de cada uno de los Posts siguiendo el diseño implementado
+que ocupe completamente su espacio y debe desplegar el contenido de cada uno de los Posts siguiendo el diseño implementado
 en la actividad previa de [LayoutAssignment](https://github.com/mercadodiego/RedditReader/blob/layout_assignment/README.md).
 Tener en cuenta que el título debe poder siempre mostrarse y la altura de cada fila debe ajustarse para permitirlo
 6. Implementar un *ViewHolder* en nuestra clase `ar.edu.unc.famaf.redditreader.ui.PostAdapter`
