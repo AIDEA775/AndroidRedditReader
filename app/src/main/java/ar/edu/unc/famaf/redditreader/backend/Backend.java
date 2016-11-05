@@ -9,9 +9,11 @@ import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
+
 public class Backend implements GetTopPostsTask.GetTopPostsListener {
     private static Backend ourInstance = new Backend();
     private BackendListener listener;
+    private RedditDBHelper dbHelper;
 
     public interface BackendListener {
         void onReceivePostsUI(List<PostModel> postModelsList);
@@ -26,20 +28,21 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
 
     public void getTopPosts(Context context, BackendListener listener) {
         this.listener = listener;
+        this.dbHelper = new RedditDBHelper(context);
 
         if (isOnline(context)) {
             Log.i("Backend", "Executing GetTopPostsTask");
             GetTopPostsTask getTopPostsTask = new GetTopPostsTask(this);
             getTopPostsTask.execute();
         } else {
-            // todo traer de la base de datos
+            this.listener.onReceivePostsUI(this.dbHelper.getTopPostsFromDatabase());
         }
     }
 
     @Override
     public void onReceivePosts(List<PostModel> postModelsList) {
-        // todo guardar en la base de datos
-        listener.onReceivePostsUI(postModelsList);
+        this.dbHelper.saveTopPosts(postModelsList);
+        this.listener.onReceivePostsUI(postModelsList);
     }
 
     private boolean isOnline(Context context) {
