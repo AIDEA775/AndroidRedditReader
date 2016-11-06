@@ -30,14 +30,14 @@ import ar.edu.unc.famaf.redditreader.backend.RedditDBHelper;
 
 public class PostAdapter extends ArrayAdapter<PostModel>{
     private List<PostModel> list = null;
-    private LruCache<String, Bitmap> mMemoryCache;
+    private LruCache<String, Bitmap> memoryCache;
 
     public PostAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
         this.list = new ArrayList<>();
 
         final int cacheSize = (int) ((Runtime.getRuntime().maxMemory() / 1024) / 8) ;
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+        memoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
                 return bitmap.getByteCount() / 1024;
@@ -112,7 +112,8 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
                 getContext().getString(R.string.coments_post), post.getNumComments()));
 
         holder.progress.setVisibility(View.GONE);
-        switch (post.getThumbnail()) {
+        String thumbnail = post.getThumbnail();
+        switch (thumbnail) {
             case "default":
                 holder.thumbnail.setImageResource(R.drawable.reddit_default);
                 break;
@@ -126,11 +127,12 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
                 holder.thumbnail.setImageResource(R.drawable.reddit_nsfw);
                 break;
             default:
-                Bitmap bitmap = getBitmapFromCache(post.getThumbnail());
+                Bitmap bitmap = getBitmapFromCache(thumbnail);
                 if (bitmap == null) {
                     RedditDBHelper dbHelper = new RedditDBHelper(getContext());
-                    bitmap = dbHelper.getThumbnailBitmap(post.getThumbnail());
+                    bitmap = dbHelper.getThumbnailBitmap(thumbnail);
                 }
+
                 if (bitmap != null) {
                     holder.thumbnail.setImageBitmap(bitmap);
                 } else {
@@ -145,13 +147,12 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
     }
 
     private void addBitmapToCache(String key, Bitmap bitmap) {
-        if (getBitmapFromCache(key) == null) {
-            mMemoryCache.put(key, bitmap);
-        }
+        if (key != null && bitmap != null && getBitmapFromCache(key) == null)
+            memoryCache.put(key, bitmap);
     }
 
     private Bitmap getBitmapFromCache(String key) {
-        return mMemoryCache.get(key);
+        return memoryCache.get(key);
     }
 
     private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
