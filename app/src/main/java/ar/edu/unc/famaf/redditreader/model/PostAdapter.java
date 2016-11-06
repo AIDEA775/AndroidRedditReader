@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ar.edu.unc.famaf.redditreader.R;
+import ar.edu.unc.famaf.redditreader.backend.RedditDBHelper;
 
 
 public class PostAdapter extends ArrayAdapter<PostModel>{
@@ -125,7 +126,11 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
                 holder.thumbnail.setImageResource(R.drawable.reddit_nsfw);
                 break;
             default:
-                final Bitmap bitmap = getBitmapFromCache(post.getThumbnail());
+                Bitmap bitmap = getBitmapFromCache(post.getThumbnail());
+                if (bitmap == null) {
+                    RedditDBHelper dbHelper = new RedditDBHelper(getContext());
+                    bitmap = dbHelper.getThumbnailBitmap(post.getThumbnail());
+                }
                 if (bitmap != null) {
                     holder.thumbnail.setImageBitmap(bitmap);
                 } else {
@@ -141,7 +146,6 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
 
     private void addBitmapToCache(String key, Bitmap bitmap) {
         if (getBitmapFromCache(key) == null) {
-            Log.i("Post Adapter: Cache", "Save bitmap " + key);
             mMemoryCache.put(key, bitmap);
         }
     }
@@ -174,7 +178,13 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(input);
+
+                Log.i("LoadImageTask", "Save bitmap: " + params[0]);
                 addBitmapToCache(String.valueOf(params[0]), bitmap);
+
+                RedditDBHelper dbHelper = new RedditDBHelper(getContext());
+                dbHelper.saveThumbnailBitmap(params[0], bitmap);
+
                 return bitmap;
             } catch (IOException e) {
                 e.printStackTrace();

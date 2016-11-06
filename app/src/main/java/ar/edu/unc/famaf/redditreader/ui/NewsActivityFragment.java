@@ -1,12 +1,8 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +43,7 @@ public class NewsActivityFragment extends Fragment implements Backend.BackendLis
 
     @Override
     public void onReceivePostsUI(List<PostModel> postModelsList) {
+        Log.i("NewsActivityFragment", "Update posts list");
         adapter.swapList(postModelsList);
         adapter.notifyDataSetChanged();
     }

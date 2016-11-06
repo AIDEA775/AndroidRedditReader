@@ -21,6 +21,7 @@ final class RedditContract {
         static final String CREATED_UTC = "created_utc";
         static final String NUM_COMMENTS = "num_comments";
         static final String UPS = "ups";
+        static final String BITMAP = "bitmap";
     }
 }
 

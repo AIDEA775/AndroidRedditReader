@@ -30,12 +30,12 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
         this.listener = listener;
         this.dbHelper = new RedditDBHelper(context);
 
+        this.listener.onReceivePostsUI(this.dbHelper.getTopPostsFromDatabase());
+
         if (isOnline(context)) {
             Log.i("Backend", "Executing GetTopPostsTask");
             GetTopPostsTask getTopPostsTask = new GetTopPostsTask(this);
             getTopPostsTask.execute();
-        } else {
-            this.listener.onReceivePostsUI(this.dbHelper.getTopPostsFromDatabase());
         }
     }
 
