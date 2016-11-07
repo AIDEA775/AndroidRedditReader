@@ -16,12 +16,13 @@ import ar.edu.unc.famaf.redditreader.model.Listing;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
-public class GetTopPostsTask extends AsyncTask<Void, Void, List<PostModel>> {
+public class GetTopPostsTask extends AsyncTask<String, Void, List<PostModel>> {
     private Parser parser;
     private GetTopPostsListener listener;
+    private Listing listing;
 
     interface GetTopPostsListener {
-        void onReceivePosts(List<PostModel> postModels);
+        void onReceivePosts(List<PostModel> postModels, String after);
     }
 
     GetTopPostsTask(GetTopPostsListener listener) {
@@ -30,11 +31,11 @@ public class GetTopPostsTask extends AsyncTask<Void, Void, List<PostModel>> {
     }
 
     @Override
-    protected List<PostModel> doInBackground(Void... params) {
+    protected List<PostModel> doInBackground(String... params) {
         try {
             Log.i("GetTopPost", "Connecting to reddit.com");
             HttpURLConnection conn = (HttpURLConnection)
-                    new URL("https://www.reddit.com/top/.json?limit=50").openConnection();
+                    new URL("https://www.reddit.com/top/.json?limit=50&after=" + params[0]).openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Host", "www.reddit.com");
 
@@ -42,7 +43,7 @@ public class GetTopPostsTask extends AsyncTask<Void, Void, List<PostModel>> {
 
             InputStream in = new BufferedInputStream(conn.getInputStream());
 
-            Listing listing = parser.readJsonStream(in);
+            listing = parser.readJsonStream(in);
 
             Log.i("GetTopPost", "Parsed JSON");
             List<PostModel> posts = new ArrayList<>();
@@ -61,7 +62,7 @@ public class GetTopPostsTask extends AsyncTask<Void, Void, List<PostModel>> {
     @Override
     protected void onPostExecute(List<PostModel> param) {
         if (param != null) {
-            listener.onReceivePosts(param);
+            listener.onReceivePosts(param, listing.getAfter());
         }
     }
 }

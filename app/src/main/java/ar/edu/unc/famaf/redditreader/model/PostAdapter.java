@@ -49,6 +49,10 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         this.list = list;
     }
 
+    public void appendPosts(List<PostModel> list) {
+        this.list.addAll(list);
+    }
+
     private static class ViewHolder {
         TextView subreddit;
         TextView title;

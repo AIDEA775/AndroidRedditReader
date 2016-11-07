@@ -12,6 +12,7 @@ import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.R;
 import ar.edu.unc.famaf.redditreader.backend.Backend;
+import ar.edu.unc.famaf.redditreader.backend.EndlessScrollListener;
 import ar.edu.unc.famaf.redditreader.model.PostAdapter;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
@@ -19,8 +20,9 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NewsActivityFragment extends Fragment implements Backend.BackendListener{
+public class NewsActivityFragment extends Fragment implements Backend.PostsIteratorListener {
     PostAdapter adapter;
+    Backend backend;
 
     public NewsActivityFragment() {
     }
@@ -30,21 +32,40 @@ public class NewsActivityFragment extends Fragment implements Backend.BackendLis
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_news, container, false);
 
-        Backend mBackend = Backend.getInstance();
+        backend = Backend.getInstance();
         adapter = new PostAdapter(getActivity(), R.layout.post_news);
 
         ListView listView = (ListView) v.findViewById(R.id.posts_list);
         listView.setAdapter(adapter);
 
-        mBackend.getTopPosts(getActivity(), this);
+        listView.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                loadNextData();
+                return true;
+            }
+        });
 
+        //backend.getTopPosts(getActivity(), this);
+        backend.getNextPosts(getActivity(), this);
         return v;
+    }
+
+    private void loadNextData() {
+        backend.getNextPosts(getActivity(), this);
     }
 
     @Override
     public void onReceivePostsUI(List<PostModel> postModelsList) {
         Log.i("NewsActivityFragment", "Update posts list");
         adapter.swapList(postModelsList);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void nextPosts(List<PostModel> posts) {
+        Log.i("NewsActivityFragment", "Append posts to list");
+        adapter.appendPosts(posts);
         adapter.notifyDataSetChanged();
     }
 }
