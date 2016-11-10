@@ -25,5 +25,8 @@
     <string name="no_connection_msg">Check your network settings</string>
     <string name="no_connection_title">You are offline</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

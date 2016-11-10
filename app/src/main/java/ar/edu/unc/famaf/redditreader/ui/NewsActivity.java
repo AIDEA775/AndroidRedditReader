@@ -11,9 +11,11 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import ar.edu.unc.famaf.redditreader.R;
+import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
-public class NewsActivity extends AppCompatActivity {
+public class NewsActivity extends AppCompatActivity
+        implements NewsActivityFragment.OnPostItemSelectedListener {
     private static final int PICK_LOGIN_REQUEST = 1;
 
     @Override
@@ -53,5 +55,10 @@ public class NewsActivity extends AppCompatActivity {
                 textView.setText(String.format("User %s logged in", user));
             }
         }
+    }
+
+    @Override
+    public void onPostItemPicked(PostModel post) {
+        // todo iniciar nueva actividad
     }
 }

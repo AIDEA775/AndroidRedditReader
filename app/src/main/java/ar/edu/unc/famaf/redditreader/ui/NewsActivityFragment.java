@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.List;
@@ -23,6 +24,10 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 public class NewsActivityFragment extends Fragment implements Backend.PostsIteratorListener {
     PostAdapter adapter;
     Backend backend;
+
+    public interface OnPostItemSelectedListener{
+        void onPostItemPicked(PostModel post);
+    }
 
     public NewsActivityFragment() {
     }
@@ -43,6 +48,13 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
             public boolean onLoadMore(int page, int totalItemsCount) {
                 loadNextData();
                 return true;
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // todo llamar a la actividad a traves de onPostItemPicked y pasarle el post model
             }
         });
 
