@@ -100,7 +100,10 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         } else {
             holder = (ViewHolder) convertView.getTag();
             if (holder.thread != null) {
+
+                // Stop thread
                 holder.thread.setImage = false;
+                holder.thread.cancel(true);
                 holder.thread = null;
             }
         }

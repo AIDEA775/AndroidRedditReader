@@ -46,7 +46,6 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
             }
         });
 
-        //backend.getTopPosts(getActivity(), this);
         backend.getNextPosts(getActivity(), this);
         return v;
     }
@@ -56,15 +55,8 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
     }
 
     @Override
-    public void onReceivePostsUI(List<PostModel> postModelsList) {
-        Log.i("NewsActivityFragment", "Update posts list");
-        adapter.swapList(postModelsList);
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void nextPosts(List<PostModel> posts) {
-        Log.i("NewsActivityFragment", "Append posts to list");
+        Log.i("NewsActivityFragment", String.format("Append %d posts to list", posts.size()));
         adapter.appendPosts(posts);
         adapter.notifyDataSetChanged();
     }

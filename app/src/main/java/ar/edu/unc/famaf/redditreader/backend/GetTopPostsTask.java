@@ -8,21 +8,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
-import ar.edu.unc.famaf.redditreader.model.Child;
 import ar.edu.unc.famaf.redditreader.model.Listing;
-import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
-public class GetTopPostsTask extends AsyncTask<String, Void, List<PostModel>> {
+public class GetTopPostsTask extends AsyncTask<String, Void, Listing> {
     private Parser parser;
     private GetTopPostsListener listener;
-    private Listing listing;
 
     interface GetTopPostsListener {
-        void onReceivePosts(List<PostModel> postModels, String after);
+        void onReceivePosts(Listing listing);
     }
 
     GetTopPostsTask(GetTopPostsListener listener) {
@@ -31,7 +26,7 @@ public class GetTopPostsTask extends AsyncTask<String, Void, List<PostModel>> {
     }
 
     @Override
-    protected List<PostModel> doInBackground(String... params) {
+    protected Listing doInBackground(String... params) {
         try {
             Log.i("GetTopPost", "Connecting to reddit.com");
             HttpURLConnection conn = (HttpURLConnection)
@@ -43,16 +38,7 @@ public class GetTopPostsTask extends AsyncTask<String, Void, List<PostModel>> {
 
             InputStream in = new BufferedInputStream(conn.getInputStream());
 
-            listing = parser.readJsonStream(in);
-
-            Log.i("GetTopPost", "Parsed JSON");
-            List<PostModel> posts = new ArrayList<>();
-            List<Child> children = listing.getChildren();
-
-            for (Child child : children) {
-                posts.add(child.getData());
-            }
-            return posts;
+            return parser.readJsonStream(in);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,9 +46,9 @@ public class GetTopPostsTask extends AsyncTask<String, Void, List<PostModel>> {
     }
 
     @Override
-    protected void onPostExecute(List<PostModel> param) {
+    protected void onPostExecute(Listing param) {
         if (param != null) {
-            listener.onReceivePosts(param, listing.getAfter());
+            listener.onReceivePosts(param);
         }
     }
 }

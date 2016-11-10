@@ -8,6 +8,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.unc.famaf.redditreader.model.Child;
+import ar.edu.unc.famaf.redditreader.model.Listing;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
@@ -19,7 +21,6 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
     private String lastPost;
 
     public interface PostsIteratorListener {
-        void onReceivePostsUI(List<PostModel> postModelsList);
         void nextPosts(List<PostModel> posts);
     }
 
@@ -30,49 +31,41 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
     private Backend() {
     }
 
-    public void getTopPosts(Context context, PostsIteratorListener listener) {
-        this.listener = listener;
-        this.dbHelper = new RedditDBHelper(context);
-
-        this.listener.onReceivePostsUI(this.dbHelper.getTopPostsFromDatabase());
-
-        if (isOnline(context)) {
-            Log.i("Backend", "Executing GetTopPostsTask");
-            GetTopPostsTask getTopPostsTask = new GetTopPostsTask(this);
-            getTopPostsTask.execute();
-        }
-    }
-    // todo traer posts desde la base de datos y llamar a listener.nextPosts(posts)
-    // todo traer mas post si hace falta
     public void getNextPosts(Context context, PostsIteratorListener listener) {
-
         Log.i("Backend", "Getting next 5 posts");
         this.listener = listener;
         this.dbHelper = new RedditDBHelper(context);
 
-        // Si hay que cargar mas desde internet
+        // Load more posts
         if (this.postsList == null || this.postsList.isEmpty()) {
             if (isOnline(context)) {
+                // From internet
                 Log.i("Backend", "Executing GetTopPostsTask");
                 GetTopPostsTask getTopPostsTask = new GetTopPostsTask(this);
                 getTopPostsTask.execute(this.lastPost);
             } else {
+                // From database
                 this.postsList = this.dbHelper.getTopPostsFromDatabase();
             }
         }
-        // Devolver 5 posts
-        if (this.postsList != null && !this.postsList.isEmpty()) {
+
+        if (this.postsList != null) {
             returnPostsToListener();
         }
     }
 
     @Override
-    public void onReceivePosts(List<PostModel> posts, String after) {
+    public void onReceivePosts(Listing listing) {
+        List<PostModel> posts = new ArrayList<>();
+        List<Child> children = listing.getChildren();
+
+        for (Child child : children) {
+            posts.add(child.getData());
+        }
         this.postsList = posts;
         this.dbHelper.saveTopPosts(posts);
-        this.lastPost = after;
+        this.lastPost = listing.getAfter();
 
-        // Devolver 5 posts
         returnPostsToListener();
     }
 
@@ -84,13 +77,17 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
     }
 
     private void returnPostsToListener() {
-        ArrayList<PostModel> posts = new ArrayList<>();
+        if (this.postsList.size() >= 5) {
 
-        // Pop 5 post for postList
-        for (int i = 0; i < 5; i++) {
-            posts.add(this.postsList.get(0));
-            this.postsList.remove(0);
+            ArrayList<PostModel> posts = new ArrayList<>();
+
+            // Pop and return 5 post of postList
+            for (int i = 0; i < 5; i++) {
+                posts.add(this.postsList.get(0));
+                this.postsList.remove(0);
+            }
+
+            listener.nextPosts(posts);
         }
-        listener.nextPosts(posts);
     }
 }
