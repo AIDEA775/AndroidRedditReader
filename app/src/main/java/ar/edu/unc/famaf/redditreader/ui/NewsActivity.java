@@ -38,8 +38,8 @@ public class NewsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_sign_in) {
-            Intent i = new Intent(this, LoginActivity.class);
-            startActivityForResult(i, PICK_LOGIN_REQUEST);
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, PICK_LOGIN_REQUEST);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -48,7 +48,7 @@ public class NewsActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_LOGIN_REQUEST) {
-            if(resultCode == Activity.RESULT_OK){
+            if(resultCode == Activity.RESULT_OK) {
                 String user = data.getStringExtra("user");
 
                 TextView textView = (TextView) findViewById(R.id.loginStatusTextView);
@@ -59,6 +59,8 @@ public class NewsActivity extends AppCompatActivity
 
     @Override
     public void onPostItemPicked(PostModel post) {
-        // todo iniciar nueva actividad
+        Intent intent = new Intent(this, NewsDetailActivity.class);
+        // TODO pasarle el post serializado
+        startActivity(intent);
     }
 }

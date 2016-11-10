@@ -25,7 +25,7 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
     PostAdapter adapter;
     Backend backend;
 
-    public interface OnPostItemSelectedListener{
+    public interface OnPostItemSelectedListener {
         void onPostItemPicked(PostModel post);
     }
 
@@ -41,6 +41,17 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
         adapter = new PostAdapter(getActivity(), R.layout.post_news);
 
         ListView listView = (ListView) v.findViewById(R.id.posts_list);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // TODO Casteos?
+                Log.i("List", "Item clicked!");
+                PostModel post = (PostModel) adapterView.getItemAtPosition(i);
+                ((OnPostItemSelectedListener) getActivity()).onPostItemPicked(post);
+            }
+        });
+
         listView.setAdapter(adapter);
 
         listView.setOnScrollListener(new EndlessScrollListener() {
@@ -48,13 +59,6 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
             public boolean onLoadMore(int page, int totalItemsCount) {
                 loadNextData();
                 return true;
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // todo llamar a la actividad a traves de onPostItemPicked y pasarle el post model
             }
         });
 

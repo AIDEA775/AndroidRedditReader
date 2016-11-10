@@ -184,7 +184,8 @@ Fuente:  [guides.codepath.com](https://guides.codepath.com/android/Endless-Scrol
 
 ### Enunciado
 
- 1-) Para "escuchar" por los eventos de selección de celda debe reimplementar el método `ListView.setOnItemClickListener(OnItemClickListener listener)`
+ 1-) Para "escuchar" por los eventos de selección de celda debe reimplementar el método
+  `ListView.setOnItemClickListener(OnItemClickListener listener)`
 
  2-) Emplear la siguiente interfaz para la comunicación entre `NewsActivity` y `NewsActivityFragment`
 
@@ -194,9 +195,16 @@ Fuente:  [guides.codepath.com](https://guides.codepath.com/android/Endless-Scrol
  }
  ```
 
- 3-) La actividad de detalle debe llevar de nombre `ar.edu.unc.famaf.redditreader.ui.NewsDetailActivity`, con su correspondiente fragmento `ar.edu.unc.famaf.redditreader.ui.NewsDetailActivityFragment`
+ 3-) La actividad de detalle debe llevar de nombre `ar.edu.unc.famaf.redditreader.ui.NewsDetailActivity`,
+  con su correspondiente fragmento `ar.edu.unc.famaf.redditreader.ui.NewsDetailActivityFragment`
 
  4-) Mostrar el título del post en un `TextView`
+
+### Tip
+
+* Para poder emplear PostModel como parte del Intent, dicho objeto debe implementar la interfaz
+Serializable y emplear los métodos putExtra(String name, Serializable value) y Serializable
+getSerializableExtra(String name) de la clase android.content.Intent
 
 
 ## Condiciones generales de entrega
