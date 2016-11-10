@@ -60,7 +60,7 @@ public class NewsActivity extends AppCompatActivity
     @Override
     public void onPostItemPicked(PostModel post) {
         Intent intent = new Intent(this, NewsDetailActivity.class);
-        // TODO pasarle el post serializado
+        intent.putExtra("Post", post);
         startActivity(intent);
     }
 }
