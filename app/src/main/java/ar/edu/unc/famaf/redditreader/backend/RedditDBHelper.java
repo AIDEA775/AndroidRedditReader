@@ -51,13 +51,13 @@ public class RedditDBHelper extends SQLiteOpenHelper {
 
     List<PostModel> getTopPostsFromDatabase() {
         ArrayList<PostModel> list = new ArrayList<>();
-
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
         Cursor c = sqLiteDatabase.query(PostEntry.TABLE_NAME,null,null,null,null,null,null);
         while (c.moveToNext()) {
             list.add(postFromCursor(c));
         }
+
         c.close();
         sqLiteDatabase.close();
         return list;
@@ -123,6 +123,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
     public Bitmap getThumbnailBitmap(String key) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         Bitmap bitmap = null;
+
         Cursor c = sqLiteDatabase.query(
                 PostEntry.TABLE_NAME,
                 null,
@@ -135,6 +136,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
         if (c.moveToNext()) {
             bitmap = getImage(c.getBlob(c.getColumnIndex(PostEntry.BITMAP)));
         }
+
         c.close();
         sqLiteDatabase.close();
         return bitmap;

@@ -3,6 +3,7 @@ package ar.edu.unc.famaf.redditreader.backend;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
                 getTopPostsTask.execute(this.lastPost);
             } else {
                 // From database
+                Log.i("Backend", "Reading from database");
                 this.postsList = this.dbHelper.getTopPostsFromDatabase();
             }
         }
@@ -57,8 +59,9 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
         List<PostModel> posts = listing.getChildren();
 
         this.postsList = posts;
-        this.dbHelper.saveTopPosts(posts);
         this.lastPost = listing.getAfter();
+
+        new SaveTopPostTask(posts).execute();
 
         returnPostsToListener();
     }
@@ -82,6 +85,22 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
             }
 
             listener.nextPosts(nextPosts);
+        }
+    }
+
+    private class SaveTopPostTask extends AsyncTask<Void, Void, Void> {
+        List<PostModel> postModelList;
+
+        SaveTopPostTask(List<PostModel> postModels) {
+            this.postModelList = postModels;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.e("SaveTopPostTask", "Por guardar");
+            dbHelper.saveTopPosts(this.postModelList);
+            Log.e("SaveTopPostTask", "Guardado");
+            return null;
         }
     }
 }

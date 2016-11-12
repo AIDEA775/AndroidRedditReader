@@ -46,7 +46,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         };
     }
 
-    public void swapList(List<PostModel> list) {
+    void swapList(List<PostModel> list) {
         this.list = list;
     }
 
