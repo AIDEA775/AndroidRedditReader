@@ -1,4 +1,4 @@
-package ar.edu.unc.famaf.redditreader.model;
+package ar.edu.unc.famaf.redditreader.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,13 +26,14 @@ import java.util.Locale;
 
 import ar.edu.unc.famaf.redditreader.R;
 import ar.edu.unc.famaf.redditreader.backend.RedditDBHelper;
+import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class PostAdapter extends ArrayAdapter<PostModel>{
     private List<PostModel> list = null;
     private LruCache<String, Bitmap> memoryCache;
 
-    public PostAdapter(Context context, int textViewResourceId) {
+    PostAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
         this.list = new ArrayList<>();
 
@@ -49,7 +50,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         this.list = list;
     }
 
-    public void appendPosts(List<PostModel> list) {
+    void appendPosts(List<PostModel> list) {
         this.list.addAll(list);
     }
 

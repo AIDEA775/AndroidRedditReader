@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Listing {
     private String modhash;
-    private List<Child> children;
+    private List<PostModel> children;
     private String after;
     private String before;
 
@@ -25,11 +25,11 @@ public class Listing {
         this.modhash = modhash;
     }
 
-    public List<Child> getChildren() {
+    public List<PostModel> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Child> children) {
+    public void setChildren(List<PostModel> children) {
         this.children = children;
     }
 

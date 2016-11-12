@@ -14,7 +14,6 @@ import java.util.List;
 import ar.edu.unc.famaf.redditreader.R;
 import ar.edu.unc.famaf.redditreader.backend.Backend;
 import ar.edu.unc.famaf.redditreader.backend.EndlessScrollListener;
-import ar.edu.unc.famaf.redditreader.model.PostAdapter;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 

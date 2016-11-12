@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.model.Listing;
-import ar.edu.unc.famaf.redditreader.model.Child;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 @SuppressWarnings("TryFinallyCanBeTryWithResources")
@@ -69,9 +68,8 @@ public class Parser {
         return listing;
     }
 
-
-    private List<Child> readChildrenList(JsonReader reader) throws IOException {
-        List<Child> children = new ArrayList<>();
+    private List<PostModel> readChildrenList(JsonReader reader) throws IOException {
+        List<PostModel> children = new ArrayList<>();
 
         reader.beginArray();
         while (reader.hasNext()) {
@@ -81,17 +79,14 @@ public class Parser {
         return children;
     }
 
-    private Child readChild(JsonReader reader) throws IOException {
-        Child child = new Child();
+    private PostModel readChild(JsonReader reader) throws IOException {
+        PostModel child = null;
 
         reader.beginObject();
         while (reader.hasNext()) {
             switch (reader.nextName()) {
-                case "kind":
-                    child.setKind(reader.nextString());
-                    break;
                 case "data":
-                    child.setData(readChildData(reader));
+                    child = readChildData(reader);
                     break;
                 default:
                     reader.skipValue();

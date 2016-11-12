@@ -8,7 +8,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.unc.famaf.redditreader.model.Child;
 import ar.edu.unc.famaf.redditreader.model.Listing;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
@@ -32,7 +31,6 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
     }
 
     public void getNextPosts(Context context, PostsIteratorListener listener) {
-        Log.i("Backend", "Getting next 5 posts");
         this.listener = listener;
         this.dbHelper = new RedditDBHelper(context);
 
@@ -56,12 +54,8 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
 
     @Override
     public void onReceivePosts(Listing listing) {
-        List<PostModel> posts = new ArrayList<>();
-        List<Child> children = listing.getChildren();
+        List<PostModel> posts = listing.getChildren();
 
-        for (Child child : children) {
-            posts.add(child.getData());
-        }
         this.postsList = posts;
         this.dbHelper.saveTopPosts(posts);
         this.lastPost = listing.getAfter();
@@ -79,15 +73,15 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
     private void returnPostsToListener() {
         if (this.postsList.size() >= 5) {
 
-            ArrayList<PostModel> posts = new ArrayList<>();
+            ArrayList<PostModel> nextPosts = new ArrayList<>();
 
             // Pop and return 5 post of postList
             for (int i = 0; i < 5; i++) {
-                posts.add(this.postsList.get(0));
+                nextPosts.add(this.postsList.get(0));
                 this.postsList.remove(0);
             }
 
-            listener.nextPosts(posts);
+            listener.nextPosts(nextPosts);
         }
     }
 }
