@@ -51,11 +51,15 @@ public class RedditDBHelper extends SQLiteOpenHelper {
 
     List<PostModel> getTopPostsFromDatabase() {
         ArrayList<PostModel> list = new ArrayList<>();
-        Cursor c = getReadableDatabase().query(PostEntry.TABLE_NAME,null,null,null,null,null,null);
+
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.query(PostEntry.TABLE_NAME,null,null,null,null,null,null);
         while (c.moveToNext()) {
             list.add(postFromCursor(c));
         }
         c.close();
+        sqLiteDatabase.close();
         return list;
     }
 
