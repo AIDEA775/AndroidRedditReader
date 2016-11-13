@@ -97,9 +97,7 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Log.e("SaveTopPostTask", "Por guardar");
             dbHelper.saveTopPosts(this.postModelList);
-            Log.e("SaveTopPostTask", "Guardado");
             return null;
         }
     }

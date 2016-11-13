@@ -1,17 +1,20 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import ar.edu.unc.famaf.redditreader.R;
+import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class NewsDetailActivityFragment extends Fragment {
+    TextView title;
+
     public NewsDetailActivityFragment() {
     }
 
@@ -24,7 +27,15 @@ public class NewsDetailActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_news_detail, container, false);
+        View v = inflater.inflate(R.layout.fragment_news_detail, container, false);
+
+        title = (TextView) v.findViewById(R.id.detail_title);
+
+        return v;
+    }
+
+    public void setDetailPost(PostModel post) {
+        title.setText(post.getTitle());
     }
 
 }

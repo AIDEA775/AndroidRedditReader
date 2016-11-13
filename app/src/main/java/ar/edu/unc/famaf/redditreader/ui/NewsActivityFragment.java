@@ -1,5 +1,6 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,12 +24,27 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 public class NewsActivityFragment extends Fragment implements Backend.PostsIteratorListener {
     PostAdapter adapter;
     Backend backend;
+    OnPostItemSelectedListener listener;
 
     public interface OnPostItemSelectedListener {
         void onPostItemPicked(PostModel post);
     }
 
     public NewsActivityFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the listener interface. If not, it throws an exception
+        try {
+            listener = (OnPostItemSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnPostItemSelectedListener");
+        }
     }
 
     @Override
@@ -44,10 +60,8 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // TODO Casteos?
-                Log.i("List", "Item clicked!");
                 PostModel post = (PostModel) adapterView.getItemAtPosition(i);
-                ((OnPostItemSelectedListener) getActivity()).onPostItemPicked(post);
+                listener.onPostItemPicked(post);
             }
         });
 
