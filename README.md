@@ -176,13 +176,15 @@ Fuente:  [guides.codepath.com](https://guides.codepath.com/android/Endless-Scrol
  resultados se debe invocar al método `notifyDataSetChanged()` de nuestro propio adapter.
 
 
-## Step 8 (Primera parte)
+## Step 8
 
 ### Objetivos
 
 * Al seleccionar una celda de la lista, mostrar el detalle del post.
 
 ### Enunciado
+
+#### Primera parte
 
  1-) Para "escuchar" por los eventos de selección de celda debe reimplementar el método
   `ListView.setOnItemClickListener(OnItemClickListener listener)`
@@ -199,6 +201,20 @@ Fuente:  [guides.codepath.com](https://guides.codepath.com/android/Endless-Scrol
   con su correspondiente fragmento `ar.edu.unc.famaf.redditreader.ui.NewsDetailActivityFragment`
 
  4-) Mostrar el título del post en un `TextView`
+
+
+#### Segunda parte
+
+1-) Mostrar el siguiente detalle:
+* Subrredit al que pertenece
+* Fecha
+* Titulo
+* Usuario
+* Preview (si está presente)
+* Link a sitio web (si corresponde)
+
+2-) Al seleccionar link el mismo debe abrir en una nueva actividad con una [WebView](https://developer.android.com/reference/android/webkit/WebView.html) que despliegue el contenido web, sin abandonar la aplicación
+
 
 ### Tip
 
