@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.model.Listing;
@@ -19,6 +18,8 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
     private RedditDBHelper dbHelper;
     private List<PostModel> postsList = null;
     private String lastPost;
+    private int index;
+    private boolean clear = true;
 
     public interface PostsIteratorListener {
         void nextPosts(List<PostModel> posts);
@@ -36,8 +37,15 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
         this.dbHelper = new RedditDBHelper(context);
 
         // Load more posts
-        if (this.postsList == null || this.postsList.isEmpty()) {
+        if (this.postsList == null || index + 5 >= this.postsList.size()) {
             if (isOnline(context)) {
+
+                // Clear old post
+                if (this.clear) {
+                    dbHelper.clearTopPosts();
+                    clear = false;
+                }
+
                 // From internet
                 Log.i("Backend", "Executing GetTopPostsTask");
                 GetTopPostsTask getTopPostsTask = new GetTopPostsTask(this);
@@ -60,6 +68,7 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
 
         this.postsList = posts;
         this.lastPost = listing.getAfter();
+        this.index = 0;
 
         new SaveTopPostTask(posts).execute();
 
@@ -74,17 +83,9 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
     }
 
     private void returnPostsToListener() {
-        if (this.postsList.size() >= 5) {
-
-            ArrayList<PostModel> nextPosts = new ArrayList<>();
-
-            // Pop and return 5 post of postList
-            for (int i = 0; i < 5; i++) {
-                nextPosts.add(this.postsList.get(0));
-                this.postsList.remove(0);
-            }
-
-            listener.nextPosts(nextPosts);
+        if (index + 5 < this.postsList.size()) {
+            listener.nextPosts(this.postsList.subList(index, index + 5));
+            index += 5;
         }
     }
 
@@ -97,7 +98,7 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
 
         @Override
         protected Void doInBackground(Void... params) {
-            dbHelper.saveTopPosts(this.postModelList);
+            dbHelper.saveNextTopPosts(this.postModelList);
             return null;
         }
     }
