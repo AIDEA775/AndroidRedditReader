@@ -2,35 +2,29 @@ package ar.edu.unc.famaf.redditreader.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import ar.edu.unc.famaf.redditreader.R;
+import ar.edu.unc.famaf.redditreader.backend.LoadImageTask;
 import ar.edu.unc.famaf.redditreader.backend.RedditDBHelper;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class PostAdapter extends ArrayAdapter<PostModel>{
-    private List<PostModel> list = null;
+    private List<PostModel> list;
     private LruCache<String, Bitmap> memoryCache;
 
     PostAdapter(Context context, int textViewResourceId) {
@@ -46,10 +40,6 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         };
     }
 
-    void swapList(List<PostModel> list) {
-        this.list = list;
-    }
-
     void appendPosts(List<PostModel> list) {
         this.list.addAll(list);
     }
@@ -59,7 +49,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         TextView title;
         TextView created_utc;
         ImageView thumbnail;
-        TextView comments;
+        Button comments;
         LoadImageTask thread;
         ProgressBar progress;
     }
@@ -93,7 +83,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
             holder.subreddit = (TextView) convertView.findViewById(R.id.post_item_subreddit);
             holder.title = (TextView) convertView.findViewById(R.id.post_item_title);
             holder.created_utc = (TextView) convertView.findViewById(R.id.post_item_created_utc);
-            holder.comments = (TextView) convertView.findViewById(R.id.post_item_comments);
+            holder.comments = (Button) convertView.findViewById(R.id.post_item_comments);
             holder.thumbnail = (ImageView) convertView.findViewById(R.id.post_item_thumbnail);
             holder.progress = (ProgressBar) convertView.findViewById(R.id.post_item_progressbar);
 
@@ -112,10 +102,8 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         PostModel post = list.get(position);
 
         holder.title.setText(post.getTitle());
-        holder.subreddit.setText(String.format(Locale.US, "/r/%s", post.getSubreddit()));
-        holder.created_utc.setText(
-                DateUtils.getRelativeTimeSpanString(post.getCreatedUtc() * 1000,
-                        System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS));
+        holder.subreddit.setText(post.getSubredditPath());
+        holder.created_utc.setText(post.getCreatedAgo());
         holder.comments.setText(String.format(Locale.US, "%d " +
                 getContext().getString(R.string.coments_post), post.getNumComments()));
 
@@ -136,17 +124,10 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
                 break;
             default:
                 Bitmap bitmap = getBitmapFromCache(thumbnail);
-                if (bitmap == null) {
-                    RedditDBHelper dbHelper = new RedditDBHelper(getContext());
-                    bitmap = dbHelper.getThumbnailBitmap(thumbnail);
-                }
-
-                if (bitmap != null) {
+                if (bitmap != null)
                     holder.thumbnail.setImageBitmap(bitmap);
-                } else {
-                    holder.progress.setVisibility(View.VISIBLE);
-                    holder.thumbnail.setImageResource(android.R.color.transparent);
-                    holder.thread = new LoadImageTask(holder.thumbnail, holder.progress);
+                else {
+                    holder.thread = new LoadThumbnailTask(getContext(), holder.thumbnail, holder.progress);
                     holder.thread.execute(post.getThumbnail());
                 }
                 break;
@@ -163,50 +144,37 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         return memoryCache.get(key);
     }
 
-    private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
-        private ImageView imageView;
-        private ProgressBar progressBar;
-        boolean setImage;
+    private class LoadThumbnailTask extends LoadImageTask {
+        private RedditDBHelper dbHelper;
 
-        LoadImageTask(ImageView imageView, ProgressBar progressBar){
-            this.imageView = imageView;
-            this.progressBar = progressBar;
+        LoadThumbnailTask(Context context, ImageView view, ProgressBar bar) {
+            super(view, bar);
+            this.dbHelper = new RedditDBHelper(context);
         }
 
         @Override
-        protected void onPreExecute() {
-            setImage = true;
-        }
+        public Bitmap doInBackground(String... params) {
+            Bitmap thumbnail = dbHelper.getThumbnailBitmap(params[0]);
 
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            try {
-                URL url = new URL(params[0]);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap bitmap = BitmapFactory.decodeStream(input);
-
-                Log.i("LoadImageTask", "Save bitmap: " + params[0]);
-                addBitmapToCache(String.valueOf(params[0]), bitmap);
-
-                RedditDBHelper dbHelper = new RedditDBHelper(getContext());
-                dbHelper.saveThumbnailBitmap(params[0], bitmap);
-
-                return bitmap;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
+            if (thumbnail == null) {
+                thumbnail = super.doInBackground(params);
+                if (!isCancelled() && thumbnail != null) {
+                    dbHelper.saveThumbnailBitmap(params[0], thumbnail);
+                }
             }
+            addBitmapToCache(params[0], thumbnail);
+            return thumbnail;
+        }
+
+        @Override
+        protected void onCancelled() {
+            dbHelper.close();
         }
 
         @Override
         protected void onPostExecute(Bitmap param) {
-            if (setImage && param != null) {
-                imageView.setImageBitmap(param);
-                progressBar.setVisibility(View.GONE);
-            }
+            super.onPostExecute(param);
+            dbHelper.close();
         }
     }
 }
