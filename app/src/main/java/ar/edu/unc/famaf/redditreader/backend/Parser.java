@@ -1,6 +1,5 @@
 package ar.edu.unc.famaf.redditreader.backend;
 
-
 import android.util.JsonReader;
 import android.util.JsonToken;
 
@@ -12,6 +11,7 @@ import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.model.Listing;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
+
 
 @SuppressWarnings("TryFinallyCanBeTryWithResources")
 public class Parser {
@@ -118,6 +118,9 @@ public class Parser {
                 case "thumbnail":
                     postModel.setThumbnail(reader.nextString());
                     break;
+                case "preview":
+                    postModel.setPreview(readPreview(reader));
+                    break;
                 case "url":
                     postModel.setUrl(reader.nextString());
                     break;
@@ -139,5 +142,61 @@ public class Parser {
         }
         reader.endObject();
         return postModel;
+    }
+
+    private String readPreview(JsonReader reader) throws IOException{
+        String url = null;
+        reader.beginObject();
+
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (name.equals("images")) {
+                url = readImages(reader);
+            } else {
+                reader.skipValue();
+            }
+        }
+
+        reader.endObject();
+        return url;
+    }
+
+    private String readImages(JsonReader reader) throws IOException{
+        String url = null;
+        reader.beginArray();
+
+        if (reader.hasNext()) {
+            // take first object
+            reader.beginObject();
+            while (reader.hasNext()) {
+                String name = reader.nextName();
+                if (name.equals("source")) {
+                    url = readSource(reader);
+                } else {
+                    reader.skipValue();
+                }
+            }
+            reader.endObject();
+        }
+
+        reader.endArray();
+        return url;
+    }
+
+    private String readSource(JsonReader reader) throws IOException {
+        String url = null;
+        reader.beginObject();
+
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (name.equals("url")) {
+                url = reader.nextString();
+            } else {
+                reader.skipValue();
+            }
+        }
+
+        reader.endObject();
+        return url;
     }
 }

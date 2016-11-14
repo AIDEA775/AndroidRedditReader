@@ -213,8 +213,9 @@ Fuente:  [guides.codepath.com](https://guides.codepath.com/android/Endless-Scrol
 * Preview (si está presente)
 * Link a sitio web (si corresponde)
 
-2-) Al seleccionar link el mismo debe abrir en una nueva actividad con una [WebView](https://developer.android.com/reference/android/webkit/WebView.html) que despliegue el contenido web, sin abandonar la aplicación
-
+2-) Al seleccionar link el mismo debe abrir en una nueva actividad con una
+[WebView](https://developer.android.com/reference/android/webkit/WebView.html) que despliegue el
+contenido web, sin abandonar la aplicación
 
 ### Tip
 

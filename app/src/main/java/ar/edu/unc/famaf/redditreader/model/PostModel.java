@@ -1,7 +1,10 @@
 package ar.edu.unc.famaf.redditreader.model;
 
+import android.text.format.DateUtils;
 
 import java.io.Serializable;
+import java.util.Locale;
+
 
 public class PostModel implements Serializable {
     private String domain;
@@ -9,6 +12,7 @@ public class PostModel implements Serializable {
     private String id;
     private String author;
     private String thumbnail;
+    private String preview = "";
     private String url;
     private String title;
     private long created_utc;
@@ -25,6 +29,10 @@ public class PostModel implements Serializable {
 
     public String getSubreddit() {
         return subreddit;
+    }
+
+    public String getSubredditPath() {
+        return String.format(Locale.US, "/r/%s", subreddit);
     }
 
     public void setSubreddit(String subreddit) {
@@ -55,6 +63,14 @@ public class PostModel implements Serializable {
         this.thumbnail = thumbnail;
     }
 
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -73,6 +89,11 @@ public class PostModel implements Serializable {
 
     public long getCreatedUtc() {
         return created_utc;
+    }
+
+    public String getCreatedAgo() {
+        return String.valueOf(DateUtils.getRelativeTimeSpanString(created_utc * 1000,
+                System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS));
     }
 
     public void setCreatedUtc(long created_utc) {

@@ -18,7 +18,7 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class RedditDBHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "Posts.db";
 
     public RedditDBHelper(Context context) {
@@ -34,6 +34,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
                 + PostEntry.ID + " TEXT NOT NULL,"
                 + PostEntry.AUTHOR + " TEXT NOT NULL,"
                 + PostEntry.THUMBNAIL + " TEXT NOT NULL,"
+                + PostEntry.PREVIEW + " TEXT NOT NULL,"
                 + PostEntry.URL + " TEXT NOT NULL,"
                 + PostEntry.TITLE + " TEXT NOT NULL,"
                 + PostEntry.CREATED_UTC + " INTEGER,"
@@ -70,6 +71,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
         post.setId(c.getString(c.getColumnIndex(PostEntry.ID)));
         post.setAuthor(c.getString(c.getColumnIndex(PostEntry.AUTHOR)));
         post.setThumbnail(c.getString(c.getColumnIndex(PostEntry.THUMBNAIL)));
+        post.setPreview(c.getString(c.getColumnIndex(PostEntry.PREVIEW)));
         post.setUrl(c.getString(c.getColumnIndex(PostEntry.URL)));
         post.setTitle(c.getString(c.getColumnIndex(PostEntry.TITLE)));
         post.setCreatedUtc(c.getLong(c.getColumnIndex(PostEntry.CREATED_UTC)));
@@ -78,12 +80,16 @@ public class RedditDBHelper extends SQLiteOpenHelper {
         return post;
     }
 
-    void saveTopPosts(List<PostModel> postModelsList){
+    void clearTopPosts() {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.delete(PostEntry.TABLE_NAME, null, null);
+        sqLiteDatabase.close();
+    }
+
+    void saveNextTopPosts(List<PostModel> postModelsList){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        sqLiteDatabase.delete(PostEntry.TABLE_NAME, null, null);
-
-        for(PostModel post : postModelsList) {
+        for (PostModel post : postModelsList) {
             sqLiteDatabase.insert(PostEntry.TABLE_NAME, null, postToContentValues(post));
         }
 
@@ -92,16 +98,17 @@ public class RedditDBHelper extends SQLiteOpenHelper {
 
     private ContentValues postToContentValues(PostModel post) {
         ContentValues values = new ContentValues();
-        values.put(RedditContract.PostEntry.DOMAIN, post.getDomain());
-        values.put(RedditContract.PostEntry.SUBREDDIT, post.getSubreddit());
-        values.put(RedditContract.PostEntry.ID, post.getId());
-        values.put(RedditContract.PostEntry.AUTHOR, post.getAuthor());
-        values.put(RedditContract.PostEntry.THUMBNAIL, post.getThumbnail());
-        values.put(RedditContract.PostEntry.URL, post.getUrl());
-        values.put(RedditContract.PostEntry.TITLE, post.getTitle());
-        values.put(RedditContract.PostEntry.CREATED_UTC, post.getCreatedUtc());
-        values.put(RedditContract.PostEntry.NUM_COMMENTS, post.getNumComments());
-        values.put(RedditContract.PostEntry.UPS, post.getUps());
+        values.put(PostEntry.DOMAIN, post.getDomain());
+        values.put(PostEntry.SUBREDDIT, post.getSubreddit());
+        values.put(PostEntry.ID, post.getId());
+        values.put(PostEntry.AUTHOR, post.getAuthor());
+        values.put(PostEntry.THUMBNAIL, post.getThumbnail());
+        values.put(PostEntry.PREVIEW, post.getPreview());
+        values.put(PostEntry.URL, post.getUrl());
+        values.put(PostEntry.TITLE, post.getTitle());
+        values.put(PostEntry.CREATED_UTC, post.getCreatedUtc());
+        values.put(PostEntry.NUM_COMMENTS, post.getNumComments());
+        values.put(PostEntry.UPS, post.getUps());
         return values;
     }
 

@@ -1,7 +1,7 @@
 package ar.edu.unc.famaf.redditreader.backend;
 
-
 import android.provider.BaseColumns;
+
 
 final class RedditContract {
     // To prevent someone from accidentally instantiating the contract class,
@@ -16,6 +16,7 @@ final class RedditContract {
         static final String ID = "id";
         static final String AUTHOR = "author";
         static final String THUMBNAIL = "thumbnail";
+        static final String PREVIEW = "preview";
         static final String URL = "url";
         static final String TITLE = "title";
         static final String CREATED_UTC = "created_utc";
