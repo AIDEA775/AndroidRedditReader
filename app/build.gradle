@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.3"
 
     defaultConfig {
-        applicationId "famaf.unc.edu.ar.activitiesassignment"
+        applicationId "ar.edu.unc.famaf.redditreader"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1

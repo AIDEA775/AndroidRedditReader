@@ -21,13 +21,15 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NewsActivityFragment extends Fragment implements Backend.PostsIteratorListener {
+public class NewsActivityFragment extends Fragment implements Backend.PostsIteratorListener,
+        PostAdapter.OnPostButtonSelectedListener {
     PostAdapter adapter;
     Backend backend;
     OnPostItemSelectedListener listener;
 
     public interface OnPostItemSelectedListener {
         void onPostItemPicked(PostModel post);
+        void onPostButtonBrowserPicked(String url);
     }
 
     public NewsActivityFragment() {
@@ -53,7 +55,7 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
         View v = inflater.inflate(R.layout.fragment_news, container, false);
 
         backend = Backend.getInstance();
-        adapter = new PostAdapter(getActivity(), R.layout.post_news);
+        adapter = new PostAdapter(getContext(), R.layout.post_news, this);
 
         ListView listView = (ListView) v.findViewById(R.id.posts_list);
 
@@ -88,5 +90,10 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
         Log.i("NewsActivityFragment", String.format("Append %d posts to list", posts.size()));
         adapter.appendPosts(posts);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPostButtonBrowserPicked(String url) {
+        listener.onPostButtonBrowserPicked(url);
     }
 }

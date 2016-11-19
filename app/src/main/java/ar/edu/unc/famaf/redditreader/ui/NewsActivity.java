@@ -63,4 +63,11 @@ public class NewsActivity extends AppCompatActivity
         intent.putExtra("Post", post);
         startActivity(intent);
     }
+
+    @Override
+    public void onPostButtonBrowserPicked(String url) {
+        Intent intent = new Intent(this, PostWebView.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
+    }
 }

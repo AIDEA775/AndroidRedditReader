@@ -1,7 +1,9 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,11 +28,17 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 public class PostAdapter extends ArrayAdapter<PostModel>{
     private List<PostModel> list;
+    private OnPostButtonSelectedListener listener;
     private LruCache<String, Bitmap> memoryCache;
 
-    PostAdapter(Context context, int textViewResourceId) {
+    interface OnPostButtonSelectedListener {
+        void onPostButtonBrowserPicked(String url);
+    }
+
+    PostAdapter(Context context, int textViewResourceId, OnPostButtonSelectedListener listener) {
         super(context, textViewResourceId);
         this.list = new ArrayList<>();
+        this.listener = listener;
 
         final int cacheSize = (int) ((Runtime.getRuntime().maxMemory() / 1024) / 8) ;
         memoryCache = new LruCache<String, Bitmap>(cacheSize) {
@@ -50,6 +59,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         TextView created_utc;
         ImageView thumbnail;
         Button comments;
+        ImageButton browser;
         LoadImageTask thread;
         ProgressBar progress;
     }
@@ -84,6 +94,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
             holder.title = (TextView) convertView.findViewById(R.id.post_item_title);
             holder.created_utc = (TextView) convertView.findViewById(R.id.post_item_created_utc);
             holder.comments = (Button) convertView.findViewById(R.id.post_item_comments);
+            holder.browser = (ImageButton) convertView.findViewById(R.id.post_browser);
             holder.thumbnail = (ImageView) convertView.findViewById(R.id.post_item_thumbnail);
             holder.progress = (ProgressBar) convertView.findViewById(R.id.post_item_progressbar);
 
@@ -91,21 +102,24 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         } else {
             holder = (ViewHolder) convertView.getTag();
             if (holder.thread != null) {
-
-                // Stop thread
                 holder.thread.setImage = false;
-                holder.thread.cancel(true);
                 holder.thread = null;
             }
         }
 
-        PostModel post = list.get(position);
+        final PostModel post = list.get(position);
 
         holder.title.setText(post.getTitle());
         holder.subreddit.setText(post.getSubredditPath());
         holder.created_utc.setText(post.getCreatedAgo());
         holder.comments.setText(String.format(Locale.US, "%d " +
                 getContext().getString(R.string.coments_post), post.getNumComments()));
+        holder.browser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onPostButtonBrowserPicked(post.getUrl());
+            }
+        });
 
         holder.progress.setVisibility(View.GONE);
         String thumbnail = post.getThumbnail();
@@ -143,6 +157,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
     private Bitmap getBitmapFromCache(String key) {
         return memoryCache.get(key);
     }
+
 
     private class LoadThumbnailTask extends LoadImageTask {
         private RedditDBHelper dbHelper;

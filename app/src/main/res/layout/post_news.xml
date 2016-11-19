@@ -43,7 +43,7 @@
     <ImageButton
         android:layout_width="32dp"
         android:layout_height="wrap_content"
-        android:id="@+id/post_arrow"
+        android:id="@+id/post_browser"
         android:src="@drawable/ic_arrow_right"
         android:background="?android:selectableItemBackground"
         android:layout_alignParentTop="true"
@@ -59,8 +59,8 @@
         android:paddingLeft="8dp"
         android:layout_alignParentTop="true"
         android:id="@+id/post_layout"
-        android:layout_toLeftOf="@+id/post_arrow"
-        android:layout_toStartOf="@+id/post_arrow"
+        android:layout_toLeftOf="@+id/post_browser"
+        android:layout_toStartOf="@+id/post_browser"
         android:layout_toRightOf="@+id/image_layout"
         android:layout_toEndOf="@+id/image_layout">
 
