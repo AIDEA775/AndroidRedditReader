@@ -1,5 +1,6 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -52,10 +53,18 @@ public class NewsDetailActivityFragment extends Fragment {
         return v;
     }
 
-    public void setDetailPost(PostModel post) {
+    public void setDetailPost(final PostModel post) {
         subreddit.setText(post.getSubredditPath());
         domain.setText(post.getDomain());
         title.setText(post.getTitle());
+        title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), PostWebView.class);
+                intent.putExtra("url", post.getUrl());
+                startActivity(intent);
+            }
+        });
         created_utc.setText(post.getCreatedAgo());
         comments.setText(String.format(Locale.US, "%d " +
                 getContext().getString(R.string.coments_post), post.getNumComments()));
