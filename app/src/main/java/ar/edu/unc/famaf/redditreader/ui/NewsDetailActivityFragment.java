@@ -19,6 +19,7 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 public class NewsDetailActivityFragment extends Fragment {
     TextView subreddit;
+    TextView domain;
     TextView title;
     TextView created_utc;
     ImageView preview;
@@ -41,6 +42,7 @@ public class NewsDetailActivityFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_news_detail, container, false);
 
         subreddit = (TextView) v.findViewById(R.id.detail_subreddit);
+        domain = (TextView) v.findViewById(R.id.detail_domain);
         title = (TextView) v.findViewById(R.id.detail_title);
         created_utc = (TextView) v.findViewById(R.id.detail_created_utc);
         preview = (ImageView) v.findViewById(R.id.detail_preview);
@@ -52,6 +54,7 @@ public class NewsDetailActivityFragment extends Fragment {
 
     public void setDetailPost(PostModel post) {
         subreddit.setText(post.getSubredditPath());
+        domain.setText(post.getDomain());
         title.setText(post.getTitle());
         created_utc.setText(post.getCreatedAgo());
         comments.setText(String.format(Locale.US, "%d " +
