@@ -17,16 +17,13 @@
     <string name="coments_post">comments</string>
     <string name="no_user_logged">No user logged yet</string>
 
-    <string name="title_activity_news">"News"
-    </string>
+    <string name="title_activity_news">News</string>
 
     <string name="post_image_info">Post image</string>
     <string name="post_arrow_info">View post</string>
     <string name="no_connection_msg">Check your network settings</string>
     <string name="no_connection_title">You are offline</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="open_in_browser">Open in browser</string>
 
 </resources>

@@ -24,4 +24,6 @@
     <string name="no_connection_msg">Revisa tu conexión a internet</string>
     <string name="no_connection_title">Estas desconectado</string>
 
+    <string name="open_in_browser">Abrir en el navegador</string>
+
 </resources>

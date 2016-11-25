@@ -59,10 +59,12 @@ public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap param) {
-        if (setImage && param != null) {
-            view.setImageBitmap(param);
+        if (setImage) {
             bar.setVisibility(View.GONE);
+            if (param != null)
+                view.setImageBitmap(param);
         }
+
     }
 }
 
