@@ -18,14 +18,14 @@ import ar.edu.unc.famaf.redditreader.backend.EndlessScrollListener;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class NewsActivityFragment extends Fragment implements Backend.PostsIteratorListener,
         PostAdapter.OnPostButtonSelectedListener {
-    PostAdapter adapter;
-    Backend backend;
-    OnPostItemSelectedListener listener;
+
+    private static final String ARG_CATEGORY = "section_number";
+    private PostAdapter adapter;
+    private Backend backend;
+    private OnPostItemSelectedListener listener;
+    private String category;
 
     public interface OnPostItemSelectedListener {
         void onPostItemPicked(PostModel post);
@@ -33,6 +33,14 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
     }
 
     public NewsActivityFragment() {
+    }
+
+    public static NewsActivityFragment newInstance(String category) {
+        NewsActivityFragment fragment = new NewsActivityFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_CATEGORY, category);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -53,6 +61,8 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_news, container, false);
+
+        category = getArguments().getString(ARG_CATEGORY);
 
         backend = Backend.getInstance();
         adapter = new PostAdapter(getContext(), R.layout.post_news, this);
@@ -77,12 +87,12 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
             }
         });
 
-        backend.getNextPosts(getActivity(), this);
+        loadNextData();
         return v;
     }
 
     private void loadNextData() {
-        backend.getNextPosts(getActivity(), this);
+        backend.getNextPosts(getActivity(), this, this.category);
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 
 import ar.edu.unc.famaf.redditreader.model.Listing;
 
@@ -30,7 +31,9 @@ public class GetTopPostsTask extends AsyncTask<String, Void, Listing> {
         try {
             Log.i("GetTopPost", "Connecting to reddit.com");
             HttpURLConnection conn = (HttpURLConnection)
-                    new URL("https://www.reddit.com/top/.json?limit=50&after=" + params[0]).openConnection();
+                    new URL(String.format(Locale.US,
+                            "https://www.reddit.com/%s/.json?limit=50&after=%s",
+                            params[0], params[1])).openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Host", "www.reddit.com");
 

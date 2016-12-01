@@ -32,7 +32,7 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
     private Backend() {
     }
 
-    public void getNextPosts(Context context, PostsIteratorListener listener) {
+    public void getNextPosts(Context context, PostsIteratorListener listener, String category) {
         this.listener = listener;
         this.dbHelper = new RedditDBHelper(context);
 
@@ -49,7 +49,7 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
                 // From internet
                 Log.i("Backend", "Executing GetTopPostsTask");
                 GetTopPostsTask getTopPostsTask = new GetTopPostsTask(this);
-                getTopPostsTask.execute(this.lastPost);
+                getTopPostsTask.execute(category, this.lastPost);
             } else {
                 // From database
                 Log.i("Backend", "Reading from database");
