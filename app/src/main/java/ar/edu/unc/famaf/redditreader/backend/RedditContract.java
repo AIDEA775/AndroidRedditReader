@@ -11,6 +11,7 @@ final class RedditContract {
     /* Inner class that defines the table contents */
     static class PostEntry implements BaseColumns {
         static final String TABLE_NAME = "post";
+        static final String FILTER = "filter";
         static final String DOMAIN = "domain";
         static final String SUBREDDIT = "subreddit";
         static final String ID = "id";

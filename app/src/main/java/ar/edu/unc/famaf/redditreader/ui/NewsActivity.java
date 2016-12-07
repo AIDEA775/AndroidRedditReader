@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import ar.edu.unc.famaf.redditreader.R;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
@@ -44,7 +43,7 @@ public class NewsActivity extends AppCompatActivity
         mViewPager.setAdapter(pagerAdapter);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewPager.setCurrentItem(tab.getPosition());
@@ -96,19 +95,19 @@ public class NewsActivity extends AppCompatActivity
     @Override
     public void onPostItemPicked(PostModel post) {
         Intent intent = new Intent(this, NewsDetailActivity.class);
-        intent.putExtra("Post", post);
+        intent.putExtra(NewsDetailActivity.ARG_POST, post);
         startActivity(intent);
     }
 
     @Override
     public void onPostButtonBrowserPicked(String url) {
         Intent intent = new Intent(this, PostWebView.class);
-        intent.putExtra("url", url);
+        intent.putExtra(PostWebView.ARG_URL, url);
         startActivity(intent);
     }
 
     public class NewsPagerAdapter extends FragmentStatePagerAdapter {
-        private final String[] categories = {"hot", "new", "top"};
+        private final String[] filters = {"hot", "new", "top"};
 
         NewsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -116,17 +115,17 @@ public class NewsActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            return NewsActivityFragment.newInstance(categories[position]);
+            return NewsActivityFragment.newInstance(filters[position]);
         }
 
         @Override
         public int getCount() {
-            return categories.length;
+            return filters.length;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return categories[position];
+            return filters[position];
         }
     }
 }

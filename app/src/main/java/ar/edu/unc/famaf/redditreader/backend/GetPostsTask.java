@@ -13,15 +13,15 @@ import java.util.Locale;
 import ar.edu.unc.famaf.redditreader.model.Listing;
 
 
-public class GetTopPostsTask extends AsyncTask<String, Void, Listing> {
+public class GetPostsTask extends AsyncTask<String, Void, Listing> {
     private Parser parser;
-    private GetTopPostsListener listener;
+    private GetPostsListener listener;
 
-    interface GetTopPostsListener {
+    interface GetPostsListener {
         void onReceivePosts(Listing listing);
     }
 
-    GetTopPostsTask(GetTopPostsListener listener) {
+    GetPostsTask(GetPostsListener listener) {
         this.parser = new Parser();
         this.listener = listener;
     }

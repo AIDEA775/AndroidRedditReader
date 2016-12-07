@@ -109,7 +109,7 @@ public class Parser {
                 case "subreddit":
                     postModel.setSubreddit(reader.nextString());
                     break;
-                case "id":
+                case "name":
                     postModel.setId(reader.nextString());
                     break;
                 case "author":

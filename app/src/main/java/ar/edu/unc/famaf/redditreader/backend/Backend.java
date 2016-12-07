@@ -12,48 +12,55 @@ import ar.edu.unc.famaf.redditreader.model.Listing;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
-public class Backend implements GetTopPostsTask.GetTopPostsListener {
-    private static Backend ourInstance = new Backend();
+public class Backend implements GetPostsTask.GetPostsListener {
+    private static RedditDBHelper dbHelper;
+    private static boolean clear = true;
     private PostsIteratorListener listener;
-    private RedditDBHelper dbHelper;
     private List<PostModel> postsList = null;
     private String lastPost;
+    private String filter;
     private int index;
-    private boolean clear = true;
+    private Context context;
 
     public interface PostsIteratorListener {
         void nextPosts(List<PostModel> posts);
     }
 
-    public static Backend getInstance() {
-        return ourInstance;
-    }
-
-    private Backend() {
-    }
-
-    public void getNextPosts(Context context, PostsIteratorListener listener, String category) {
+    public Backend(Context context, PostsIteratorListener listener, String filter) {
+        this.context = context;
         this.listener = listener;
-        this.dbHelper = new RedditDBHelper(context);
+        this.filter = filter;
 
+        if (dbHelper == null)
+            dbHelper = new RedditDBHelper(context);
+    }
+
+    public void reloadPosts() {
+        Log.i("Backend", "Reload posts from database");
+        this.postsList = dbHelper.getPostsFromDatabase(this.filter);
+        this.lastPost = postsList.get(postsList.size() - 1).getId();
+        returnPostsToListener();
+    }
+
+    public void getNextPosts() {
         // Load more posts
         if (this.postsList == null || index + 5 >= this.postsList.size()) {
             if (isOnline(context)) {
 
                 // Clear old post
-                if (this.clear) {
-                    dbHelper.clearTopPosts();
+                if (clear) {
+                    dbHelper.clearPosts();
                     clear = false;
                 }
 
                 // From internet
-                Log.i("Backend", "Executing GetTopPostsTask");
-                GetTopPostsTask getTopPostsTask = new GetTopPostsTask(this);
-                getTopPostsTask.execute(category, this.lastPost);
+                Log.i("Backend", "Executing GetPostsTask");
+                GetPostsTask getPostsTask = new GetPostsTask(this);
+                getPostsTask.execute(filter, this.lastPost);
             } else {
                 // From database
                 Log.i("Backend", "Reading from database");
-                this.postsList = this.dbHelper.getTopPostsFromDatabase();
+                this.postsList = dbHelper.getPostsFromDatabase(this.filter);
             }
         }
 
@@ -89,6 +96,7 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
         }
     }
 
+    // TODO: 07/12/16 change extends, maybe by thread
     private class SaveTopPostTask extends AsyncTask<Void, Void, Void> {
         List<PostModel> postModelList;
 
@@ -98,7 +106,7 @@ public class Backend implements GetTopPostsTask.GetTopPostsListener {
 
         @Override
         protected Void doInBackground(Void... params) {
-            dbHelper.saveNextTopPosts(this.postModelList);
+            dbHelper.saveNextPosts(this.postModelList, filter);
             return null;
         }
     }

@@ -1,6 +1,7 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,11 +22,11 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 public class NewsActivityFragment extends Fragment implements Backend.PostsIteratorListener,
         PostAdapter.OnPostButtonSelectedListener {
 
-    private static final String ARG_CATEGORY = "section_number";
+    private static final String ARG_FILTER = "filter";
+    private static final String ARG_RELOAD = "reload";
     private PostAdapter adapter;
     private Backend backend;
     private OnPostItemSelectedListener listener;
-    private String category;
 
     public interface OnPostItemSelectedListener {
         void onPostItemPicked(PostModel post);
@@ -38,7 +39,7 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
     public static NewsActivityFragment newInstance(String category) {
         NewsActivityFragment fragment = new NewsActivityFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_CATEGORY, category);
+        args.putString(ARG_FILTER, category);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,9 +63,7 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_news, container, false);
 
-        category = getArguments().getString(ARG_CATEGORY);
-
-        backend = Backend.getInstance();
+        backend = new Backend(getActivity(), this, getArguments().getString(ARG_FILTER));
         adapter = new PostAdapter(getContext(), R.layout.post_news, this);
 
         ListView listView = (ListView) v.findViewById(R.id.posts_list);
@@ -82,17 +81,28 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
         listView.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                loadNextData();
+                backend.getNextPosts();
                 return true;
             }
         });
 
-        loadNextData();
         return v;
     }
 
-    private void loadNextData() {
-        backend.getNextPosts(getActivity(), this, this.category);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.getBoolean(ARG_RELOAD, false)) {
+            backend.reloadPosts();
+        } else {
+            backend.getNextPosts();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ARG_RELOAD, true);
     }
 
     @Override

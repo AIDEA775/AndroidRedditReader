@@ -15,7 +15,8 @@ import ar.edu.unc.famaf.redditreader.R;
 
 
 public class PostWebView extends AppCompatActivity {
-    String url;
+    public static String ARG_URL = "url";
+    private String url;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -28,7 +29,7 @@ public class PostWebView extends AppCompatActivity {
         setContentView(webView);
 
         Intent intent = getIntent();
-        url = intent.getStringExtra("url");
+        url = intent.getStringExtra(ARG_URL);
         webView.loadUrl(url);
     }
 

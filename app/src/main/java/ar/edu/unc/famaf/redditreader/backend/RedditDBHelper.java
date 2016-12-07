@@ -18,7 +18,7 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class RedditDBHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "Posts.db";
 
     public RedditDBHelper(Context context) {
@@ -29,6 +29,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE " + PostEntry.TABLE_NAME + " ("
                 + PostEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + PostEntry.FILTER + " TEXT NOT NULL,"
                 + PostEntry.DOMAIN + " TEXT NOT NULL,"
                 + PostEntry.SUBREDDIT + " TEXT NOT NULL,"
                 + PostEntry.ID + " TEXT NOT NULL,"
@@ -50,11 +51,18 @@ public class RedditDBHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    List<PostModel> getTopPostsFromDatabase() {
+    List<PostModel> getPostsFromDatabase(String filter) {
         ArrayList<PostModel> list = new ArrayList<>();
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
-        Cursor c = sqLiteDatabase.query(PostEntry.TABLE_NAME,null,null,null,null,null,null);
+        Cursor c = sqLiteDatabase.query(
+                PostEntry.TABLE_NAME,
+                null,
+                PostEntry.FILTER + "=?",
+                new String[]{filter},
+                null,
+                null,
+                null);
         while (c.moveToNext()) {
             list.add(postFromCursor(c));
         }
@@ -80,24 +88,29 @@ public class RedditDBHelper extends SQLiteOpenHelper {
         return post;
     }
 
-    void clearTopPosts() {
+    void clearPosts() {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.delete(PostEntry.TABLE_NAME, null, null);
         sqLiteDatabase.close();
     }
 
-    void saveNextTopPosts(List<PostModel> postModelsList){
+    void saveNextPosts(List<PostModel> postModelsList, String filter){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         for (PostModel post : postModelsList) {
-            sqLiteDatabase.insert(PostEntry.TABLE_NAME, null, postToContentValues(post));
+            sqLiteDatabase.insertWithOnConflict(
+                    PostEntry.TABLE_NAME,
+                    null,
+                    postToContentValues(post, filter),
+                    SQLiteDatabase.CONFLICT_IGNORE);
         }
 
         sqLiteDatabase.close();
     }
 
-    private ContentValues postToContentValues(PostModel post) {
+    private ContentValues postToContentValues(PostModel post, String filter) {
         ContentValues values = new ContentValues();
+        values.put(PostEntry.FILTER, filter);
         values.put(PostEntry.DOMAIN, post.getDomain());
         values.put(PostEntry.SUBREDDIT, post.getSubreddit());
         values.put(PostEntry.ID, post.getId());

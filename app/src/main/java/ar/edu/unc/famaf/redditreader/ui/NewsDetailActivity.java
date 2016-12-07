@@ -9,6 +9,7 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class NewsDetailActivity extends AppCompatActivity {
+    public static String ARG_POST = "post";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +17,7 @@ public class NewsDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news_detail);
 
         Intent i = getIntent();
-        PostModel post = (PostModel) i.getSerializableExtra("Post");
+        PostModel post = (PostModel) i.getSerializableExtra(ARG_POST);
 
         NewsDetailActivityFragment fragment = (NewsDetailActivityFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_news_detail);
