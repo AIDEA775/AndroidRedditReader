@@ -15,12 +15,14 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 public class Backend implements GetPostsTask.GetPostsListener {
     private static RedditDBHelper dbHelper;
     private static boolean clear = true;
+
+    private Context context;
     private PostsIteratorListener listener;
+    private String filter;
+
     private List<PostModel> postsList = null;
     private String lastPost;
-    private String filter;
     private int index;
-    private Context context;
 
     public interface PostsIteratorListener {
         void nextPosts(List<PostModel> posts);
@@ -38,8 +40,10 @@ public class Backend implements GetPostsTask.GetPostsListener {
     public void reloadPosts() {
         Log.i("Backend", "Reload posts from database");
         this.postsList = dbHelper.getPostsFromDatabase(this.filter);
-        this.lastPost = postsList.get(postsList.size() - 1).getId();
-        returnPostsToListener();
+        if (!this.postsList.isEmpty()) {
+            this.lastPost = postsList.get(postsList.size() - 1).getId();
+            returnPostsToListener();
+        }
     }
 
     public void getNextPosts() {

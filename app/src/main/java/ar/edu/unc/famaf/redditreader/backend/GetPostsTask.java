@@ -13,7 +13,7 @@ import java.util.Locale;
 import ar.edu.unc.famaf.redditreader.model.Listing;
 
 
-public class GetPostsTask extends AsyncTask<String, Void, Listing> {
+class GetPostsTask extends AsyncTask<String, Void, Listing> {
     private Parser parser;
     private GetPostsListener listener;
 

@@ -107,7 +107,7 @@ public class NewsActivity extends AppCompatActivity
     }
 
     public class NewsPagerAdapter extends FragmentStatePagerAdapter {
-        private final String[] filters = {"hot", "new", "top"};
+        private final String[] filters = {"new", "hot", "top"};
 
         NewsPagerAdapter(FragmentManager fm) {
             super(fm);

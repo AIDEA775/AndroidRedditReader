@@ -1,9 +1,7 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
