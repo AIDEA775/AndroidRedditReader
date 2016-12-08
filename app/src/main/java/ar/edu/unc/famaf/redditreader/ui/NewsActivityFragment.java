@@ -107,7 +107,6 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
 
     @Override
     public void nextPosts(List<PostModel> posts) {
-        Log.i("NewsActivityFragment", String.format("Append %d posts to list", posts.size()));
         adapter.appendPosts(posts);
         adapter.notifyDataSetChanged();
     }
