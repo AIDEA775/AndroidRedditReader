@@ -15,8 +15,8 @@ import ar.edu.unc.famaf.redditreader.R;
 
 
 public class PostWebView extends AppCompatActivity {
-    public static String ARG_URL = "url";
-    private String url;
+    public static final String ARG_URL = "url";
+    private String mUrl;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -29,8 +29,8 @@ public class PostWebView extends AppCompatActivity {
         setContentView(webView);
 
         Intent intent = getIntent();
-        url = intent.getStringExtra(ARG_URL);
-        webView.loadUrl(url);
+        mUrl = intent.getStringExtra(ARG_URL);
+        webView.loadUrl(mUrl);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class PostWebView extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.open_in_browser:
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
                 startActivity(browserIntent);
                 return true;
             default:

@@ -33,20 +33,21 @@ public class NewsActivity extends AppCompatActivity
         NewsPagerAdapter pagerAdapter = new NewsPagerAdapter(getSupportFragmentManager());
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
         for (int i = 0; i < pagerAdapter.getCount(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(pagerAdapter.getPageTitle(i).toString()
                     .toUpperCase()));
         }
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(pagerAdapter);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setAdapter(pagerAdapter);
 
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
+                viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -107,7 +108,7 @@ public class NewsActivity extends AppCompatActivity
     }
 
     public class NewsPagerAdapter extends FragmentStatePagerAdapter {
-        private final String[] filters = {"new", "hot", "top"};
+        private final String[] TABS_FILTERS = {"new", "hot", "top"};
 
         NewsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -115,17 +116,17 @@ public class NewsActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            return NewsActivityFragment.newInstance(filters[position]);
+            return NewsActivityFragment.newInstance(TABS_FILTERS[position]);
         }
 
         @Override
         public int getCount() {
-            return filters.length;
+            return TABS_FILTERS.length;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return filters[position];
+            return TABS_FILTERS[position];
         }
     }
 }

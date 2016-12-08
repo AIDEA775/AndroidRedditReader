@@ -20,13 +20,13 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 public class RedditDBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "Posts.db";
-    private static RedditDBHelper instance;
+    private static RedditDBHelper sInstance;
 
     public static synchronized RedditDBHelper getInstance(Context context) {
-        if (instance == null) {
-            instance = new RedditDBHelper(context.getApplicationContext());
+        if (sInstance == null) {
+            sInstance = new RedditDBHelper(context.getApplicationContext());
         }
-        return instance;
+        return sInstance;
     }
 
     private RedditDBHelper(Context context) {
@@ -80,7 +80,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    private PostModel postFromCursor(Cursor c) {
+    private static PostModel postFromCursor(Cursor c) {
         PostModel post = new PostModel();
         post.setDomain(c.getString(c.getColumnIndex(PostEntry.DOMAIN)));
         post.setSubreddit(c.getString(c.getColumnIndex(PostEntry.SUBREDDIT)));
@@ -112,7 +112,6 @@ public class RedditDBHelper extends SQLiteOpenHelper {
                     postToContentValues(post, filter),
                     SQLiteDatabase.CONFLICT_IGNORE);
         }
-
         // Don't close sqLiteDatabase for thread-safely
     }
 
@@ -137,7 +136,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(PostEntry.BITMAP, getBytes(bitmap));
+        values.put(PostEntry.BITMAP, getBytesFromBitmap(bitmap));
 
         sqLiteDatabase.update(
                 PostEntry.TABLE_NAME,
@@ -162,7 +161,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
                 null);
 
         if (c.moveToNext()) {
-            bitmap = getImage(c.getBlob(c.getColumnIndex(PostEntry.BITMAP)));
+            bitmap = getImageFromBytes(c.getBlob(c.getColumnIndex(PostEntry.BITMAP)));
         }
 
         c.close();
@@ -170,16 +169,15 @@ public class RedditDBHelper extends SQLiteOpenHelper {
         return bitmap;
     }
 
-    private static byte[] getBytes(Bitmap bitmap) {
+    private static byte[] getBytesFromBitmap(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         return stream.toByteArray();
     }
 
     @Nullable
-    private static Bitmap getImage(byte[] image) {
-        if(image != null)
-            return BitmapFactory.decodeByteArray(image, 0, image.length);
+    private static Bitmap getImageFromBytes(byte[] image) {
+        if(image != null) return BitmapFactory.decodeByteArray(image, 0, image.length);
         return null;
     }
 }

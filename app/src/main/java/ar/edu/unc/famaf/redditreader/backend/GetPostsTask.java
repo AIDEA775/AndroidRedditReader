@@ -14,16 +14,16 @@ import ar.edu.unc.famaf.redditreader.model.Listing;
 
 
 class GetPostsTask extends AsyncTask<String, Void, Listing> {
-    private Parser parser;
-    private GetPostsListener listener;
+    private Parser mParser;
+    private GetPostsListener mListener;
 
     interface GetPostsListener {
         void onReceivePosts(Listing listing);
     }
 
     GetPostsTask(GetPostsListener listener) {
-        this.parser = new Parser();
-        this.listener = listener;
+        mParser = new Parser();
+        mListener = listener;
     }
 
     @Override
@@ -41,7 +41,7 @@ class GetPostsTask extends AsyncTask<String, Void, Listing> {
 
             InputStream in = new BufferedInputStream(conn.getInputStream());
 
-            return parser.readJsonStream(in);
+            return mParser.readJsonStream(in);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,8 +50,6 @@ class GetPostsTask extends AsyncTask<String, Void, Listing> {
 
     @Override
     protected void onPostExecute(Listing param) {
-        if (param != null) {
-            listener.onReceivePosts(param);
-        }
+        if (param != null) mListener.onReceivePosts(param);
     }
 }

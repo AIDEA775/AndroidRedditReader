@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +23,9 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
 
     private static final String ARG_FILTER = "filter";
     private static final String ARG_RELOAD = "reload";
-    private PostAdapter adapter;
-    private Backend backend;
-    private OnPostItemSelectedListener listener;
+    private PostAdapter mAdapter;
+    private Backend mBackend;
+    private OnPostItemSelectedListener mListener;
 
     public interface OnPostItemSelectedListener {
         void onPostItemPicked(PostModel post);
@@ -51,7 +50,7 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
         // This makes sure that the container activity has implemented
         // the listener interface. If not, it throws an exception
         try {
-            listener = (OnPostItemSelectedListener) context;
+            mListener = (OnPostItemSelectedListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnPostItemSelectedListener");
@@ -63,8 +62,8 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_news, container, false);
 
-        backend = new Backend(getActivity(), this, getArguments().getString(ARG_FILTER));
-        adapter = new PostAdapter(getContext(), R.layout.post_news, this);
+        mBackend = new Backend(getActivity(), this, getArguments().getString(ARG_FILTER));
+        mAdapter = new PostAdapter(getContext(), R.layout.post_news, this);
 
         ListView listView = (ListView) v.findViewById(R.id.posts_list);
 
@@ -72,16 +71,16 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 PostModel post = (PostModel) adapterView.getItemAtPosition(i);
-                listener.onPostItemPicked(post);
+                mListener.onPostItemPicked(post);
             }
         });
 
-        listView.setAdapter(adapter);
+        listView.setAdapter(mAdapter);
 
         listView.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                backend.getNextPosts();
+                mBackend.getNextPosts();
                 return true;
             }
         });
@@ -93,9 +92,9 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null && savedInstanceState.getBoolean(ARG_RELOAD, false)) {
-            backend.reloadPosts();
+            mBackend.reloadPostsFromDatabase();
         } else {
-            backend.getNextPosts();
+            mBackend.getNextPosts();
         }
     }
 
@@ -107,12 +106,12 @@ public class NewsActivityFragment extends Fragment implements Backend.PostsItera
 
     @Override
     public void nextPosts(List<PostModel> posts) {
-        adapter.appendPosts(posts);
-        adapter.notifyDataSetChanged();
+        mAdapter.appendPosts(posts);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onPostButtonBrowserPicked(String url) {
-        listener.onPostButtonBrowserPicked(url);
+        mListener.onPostButtonBrowserPicked(url);
     }
 }

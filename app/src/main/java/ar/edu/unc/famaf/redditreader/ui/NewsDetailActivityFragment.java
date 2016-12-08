@@ -19,14 +19,14 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class NewsDetailActivityFragment extends Fragment {
-    TextView subreddit;
-    TextView domain;
-    TextView title;
-    TextView created_utc;
-    ImageView preview;
-    Button comments;
-    TextView author;
-    ProgressBar progressBar;
+    private TextView mSubreddit;
+    private TextView mDomain;
+    private TextView mTitle;
+    private TextView mCreated_utc;
+    private ImageView mPreview;
+    private Button mComments;
+    private TextView mAuthor;
+    private ProgressBar mProgressBar;
 
     public NewsDetailActivityFragment() {
     }
@@ -39,37 +39,35 @@ public class NewsDetailActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_news_detail, container, false);
 
-        subreddit = (TextView) v.findViewById(R.id.detail_subreddit);
-        domain = (TextView) v.findViewById(R.id.detail_domain);
-        title = (TextView) v.findViewById(R.id.detail_title);
-        created_utc = (TextView) v.findViewById(R.id.detail_created_utc);
-        preview = (ImageView) v.findViewById(R.id.detail_preview);
-        comments = (Button) v.findViewById(R.id.detail_comments);
-        author = (TextView) v.findViewById(R.id.detail_author);
-        progressBar = (ProgressBar) v.findViewById(R.id.detail_progress);
+        mSubreddit = (TextView) v.findViewById(R.id.detail_subreddit);
+        mDomain = (TextView) v.findViewById(R.id.detail_domain);
+        mTitle = (TextView) v.findViewById(R.id.detail_title);
+        mCreated_utc = (TextView) v.findViewById(R.id.detail_created_utc);
+        mPreview = (ImageView) v.findViewById(R.id.detail_preview);
+        mComments = (Button) v.findViewById(R.id.detail_comments);
+        mAuthor = (TextView) v.findViewById(R.id.detail_author);
+        mProgressBar = (ProgressBar) v.findViewById(R.id.detail_progress);
         return v;
     }
 
     public void setDetailPost(final PostModel post) {
-        subreddit.setText(post.getSubredditPath());
-        domain.setText(post.getDomain());
-        title.setText(post.getTitle());
-        title.setOnClickListener(new View.OnClickListener() {
+        mSubreddit.setText(post.getSubredditPath());
+        mDomain.setText(post.getDomain());
+        mTitle.setText(post.getTitle());
+        mTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), PostWebView.class);
-                intent.putExtra("url", post.getUrl());
+                intent.putExtra(PostWebView.ARG_URL, post.getUrl());
                 startActivity(intent);
             }
         });
-        created_utc.setText(post.getCreatedAgo());
-        comments.setText(String.format(Locale.US, "%d " +
+        mCreated_utc.setText(post.getCreatedAgo());
+        mComments.setText(String.format(Locale.US, "%d " +
                 getContext().getString(R.string.coments_post), post.getNumComments()));
-        author.setText(post.getAuthor());
-        new LoadImageTask(preview, progressBar).execute(post.getPreview());
+        mAuthor.setText(post.getAuthor());
+        new LoadImageTask(mPreview, mProgressBar).execute(post.getPreview());
     }
-
 }

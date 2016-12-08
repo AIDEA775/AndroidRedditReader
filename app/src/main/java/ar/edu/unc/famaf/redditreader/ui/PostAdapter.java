@@ -25,9 +25,9 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class PostAdapter extends ArrayAdapter<PostModel>{
-    private List<PostModel> list;
-    private OnPostButtonSelectedListener listener;
-    private LruCache<String, Bitmap> memoryCache;
+    private List<PostModel> mList;
+    private OnPostButtonSelectedListener mListener;
+    private LruCache<String, Bitmap> mMemoryCache;
 
     interface OnPostButtonSelectedListener {
         void onPostButtonBrowserPicked(String url);
@@ -35,11 +35,11 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
 
     PostAdapter(Context context, int textViewResourceId, OnPostButtonSelectedListener listener) {
         super(context, textViewResourceId);
-        this.list = new ArrayList<>();
-        this.listener = listener;
+        mList = new ArrayList<>();
+        mListener = listener;
 
         final int cacheSize = (int) ((Runtime.getRuntime().maxMemory() / 1024) / 8) ;
-        memoryCache = new LruCache<String, Bitmap>(cacheSize) {
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
                 return bitmap.getByteCount() / 1024;
@@ -48,7 +48,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
     }
 
     void appendPosts(List<PostModel> list) {
-        this.list.addAll(list);
+        mList.addAll(list);
     }
 
     private static class ViewHolder {
@@ -64,17 +64,17 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
 
     @Override
     public int getCount() {
-        return this.list.size();
+        return mList.size();
     }
 
     @Override
     public int getPosition(PostModel item) {
-        return this.list.indexOf(item);
+        return mList.indexOf(item);
     }
 
     @Override
     public PostModel getItem(int position) {
-        return this.list.get(position);
+        return mList.get(position);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
             }
         }
 
-        final PostModel post = list.get(position);
+        final PostModel post = mList.get(position);
 
         holder.title.setText(post.getTitle());
         holder.subreddit.setText(post.getSubredditPath());
@@ -115,7 +115,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
         holder.browser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onPostButtonBrowserPicked(post.getUrl());
+                mListener.onPostButtonBrowserPicked(post.getUrl());
             }
         });
 
@@ -136,9 +136,9 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
                 break;
             default:
                 Bitmap bitmap = getBitmapFromCache(thumbnail);
-                if (bitmap != null)
+                if (bitmap != null) {
                     holder.thumbnail.setImageBitmap(bitmap);
-                else {
+                } else {
                     holder.thread = new LoadThumbnailTask(getContext(), holder.thumbnail, holder.progress);
                     holder.thread.execute(post.getThumbnail());
                 }
@@ -148,31 +148,31 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
     }
 
     private void addBitmapToCache(String key, Bitmap bitmap) {
-        if (key != null && bitmap != null && getBitmapFromCache(key) == null)
-            memoryCache.put(key, bitmap);
+        if (key != null && bitmap != null && getBitmapFromCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
     }
 
     private Bitmap getBitmapFromCache(String key) {
-        return memoryCache.get(key);
+        return mMemoryCache.get(key);
     }
 
-
     private class LoadThumbnailTask extends LoadImageTask {
-        private RedditDBHelper dbHelper;
+        private RedditDBHelper mDbHelper;
 
         LoadThumbnailTask(Context context, ImageView view, ProgressBar bar) {
             super(view, bar);
-            this.dbHelper = RedditDBHelper.getInstance(context);
+            mDbHelper = RedditDBHelper.getInstance(context);
         }
 
         @Override
         public Bitmap doInBackground(String... params) {
-            Bitmap thumbnail = dbHelper.getThumbnailBitmap(params[0]);
+            Bitmap thumbnail = mDbHelper.getThumbnailBitmap(params[0]);
 
             if (thumbnail == null) {
                 thumbnail = super.doInBackground(params);
                 if (!isCancelled() && thumbnail != null) {
-                    dbHelper.saveThumbnailBitmap(params[0], thumbnail);
+                    mDbHelper.saveThumbnailBitmap(params[0], thumbnail);
                 }
             }
             addBitmapToCache(params[0], thumbnail);

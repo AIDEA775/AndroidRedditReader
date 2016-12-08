@@ -12,75 +12,80 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class Backend implements GetPostsTask.GetPostsListener {
-    private static boolean clear = true;
+    private static boolean sClearPosts = true;
 
-    private RedditDBHelper dbHelper;
-    private PostsIteratorListener listener;
-    private Context context;
-    private String filter;
+    private RedditDBHelper mDbHelper;
+    private PostsIteratorListener mListener;
+    private Context mContext;
+    private String mFilter;
 
-    private List<PostModel> postsList = null;
-    private String lastPost;
-    private int index;
+    private List<PostModel> mPostsList = null;
+    private String mLastPost;
+    private int mIndex;
 
     public interface PostsIteratorListener {
         void nextPosts(List<PostModel> posts);
     }
 
     public Backend(Context context, PostsIteratorListener listener, String filter) {
-        this.context = context;
-        this.listener = listener;
-        this.filter = filter;
-        this.dbHelper = RedditDBHelper.getInstance(context);
+        mContext = context;
+        mListener = listener;
+        mFilter = filter;
+        mDbHelper = RedditDBHelper.getInstance(context);
     }
 
-    public void reloadPosts() {
+    public void reloadPostsFromDatabase() {
         Log.i("Backend", "Reload posts from database");
-        this.postsList = dbHelper.getPostsFromDatabase(this.filter);
-        if (!this.postsList.isEmpty()) {
-            this.lastPost = postsList.get(postsList.size() - 1).getId();
+        mPostsList = mDbHelper.getPostsFromDatabase(mFilter);
+        if (!mPostsList.isEmpty()) {
+            mLastPost = mPostsList.get(mPostsList.size() - 1).getId();
             returnPostsToListener();
         }
     }
 
     public void getNextPosts() {
         // Load more posts
-        if (this.postsList == null || index + 5 >= this.postsList.size()) {
-            if (isOnline(context)) {
+        if (mPostsList == null || mIndex + 5 >= mPostsList.size()) {
+            if (isOnline(mContext)) {
 
                 // Clear old post
-                if (clear) {
-                    dbHelper.clearPosts();
-                    clear = false;
+                if (sClearPosts) {
+                    mDbHelper.clearPosts();
+                    sClearPosts = false;
                 }
 
                 // From internet
                 Log.i("Backend", "Executing GetPostsTask");
                 GetPostsTask getPostsTask = new GetPostsTask(this);
-                getPostsTask.execute(filter, this.lastPost);
+                getPostsTask.execute(mFilter, mLastPost);
             } else {
                 // From database
                 Log.i("Backend", "Reading from database");
-                this.postsList = dbHelper.getPostsFromDatabase(this.filter);
+                this.mPostsList = mDbHelper.getPostsFromDatabase(mFilter);
             }
         }
 
-        if (this.postsList != null) {
-            returnPostsToListener();
-        }
+        if (mPostsList != null) returnPostsToListener();
     }
 
     @Override
     public void onReceivePosts(Listing listing) {
         List<PostModel> posts = listing.getChildren();
 
-        this.postsList = posts;
-        this.lastPost = listing.getAfter();
-        this.index = 0;
+        mPostsList = posts;
+        mLastPost = listing.getAfter();
+        mIndex = 0;
 
         new SavePostsThread(posts).start();
 
         returnPostsToListener();
+    }
+
+    private void returnPostsToListener() {
+        if (mIndex + 5 < this.mPostsList.size()) {
+            mListener.nextPosts(this.mPostsList.subList(mIndex, mIndex + 5));
+            mIndex += 5;
+        }
     }
 
     private boolean isOnline(Context context) {
@@ -90,23 +95,16 @@ public class Backend implements GetPostsTask.GetPostsListener {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    private void returnPostsToListener() {
-        if (index + 5 < this.postsList.size()) {
-            listener.nextPosts(this.postsList.subList(index, index + 5));
-            index += 5;
-        }
-    }
-
     private class SavePostsThread extends Thread {
-        List<PostModel> postModelList;
+        private List<PostModel> mPostModelList;
 
         SavePostsThread(List<PostModel> postModels) {
-            this.postModelList = postModels;
+            mPostModelList = postModels;
         }
 
         @Override
         public void run() {
-            dbHelper.saveNextPosts(this.postModelList, filter);
+            mDbHelper.saveNextPosts(mPostModelList, mFilter);
         }
     }
 }

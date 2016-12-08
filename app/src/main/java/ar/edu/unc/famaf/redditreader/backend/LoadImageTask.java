@@ -15,19 +15,19 @@ import java.net.URL;
 
 public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
     public boolean setImage;
-    private ImageView view;
-    private ProgressBar bar;
+    private ImageView mImageView;
+    private ProgressBar mProgressBar;
 
     public LoadImageTask(ImageView view, ProgressBar bar) {
-        this.view = view;
-        this.bar = bar;
+        mImageView = view;
+        mProgressBar = bar;
     }
 
     @Override
     public void onPreExecute() {
         setImage = true;
-        bar.setVisibility(View.VISIBLE);
-        view.setImageResource(android.R.color.transparent);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mImageView.setImageResource(android.R.color.transparent);
     }
 
     @Override
@@ -44,11 +44,8 @@ public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
             connection.connect();
             InputStream input = null;
 
-            if (!isCancelled())
-                input = connection.getInputStream();
-
-            if (!isCancelled() && input != null)
-                    bitmap = BitmapFactory.decodeStream(input);
+            if (!isCancelled()) input = connection.getInputStream();
+            if (!isCancelled() && input != null) bitmap = BitmapFactory.decodeStream(input);
 
             return bitmap;
         } catch (IOException e) {
@@ -60,13 +57,12 @@ public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap param) {
         if (setImage) {
-            bar.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
             if (param != null) {
-                view.setVisibility(View.VISIBLE);
-                view.setImageBitmap(param);
+                mImageView.setVisibility(View.VISIBLE);
+                mImageView.setImageBitmap(param);
             }
         }
-
     }
 }
 
