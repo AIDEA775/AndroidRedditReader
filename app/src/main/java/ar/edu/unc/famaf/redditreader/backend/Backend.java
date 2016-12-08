@@ -3,7 +3,6 @@ package ar.edu.unc.famaf.redditreader.backend;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.List;
@@ -81,7 +80,7 @@ public class Backend implements GetPostsTask.GetPostsListener {
         this.lastPost = listing.getAfter();
         this.index = 0;
 
-        new SaveTopPostTask(posts).execute();
+        new SavePostsThread(posts).start();
 
         returnPostsToListener();
     }
@@ -100,18 +99,16 @@ public class Backend implements GetPostsTask.GetPostsListener {
         }
     }
 
-    // TODO: 07/12/16 change extends, maybe by thread
-    private class SaveTopPostTask extends AsyncTask<Void, Void, Void> {
+    private class SavePostsThread extends Thread {
         List<PostModel> postModelList;
 
-        SaveTopPostTask(List<PostModel> postModels) {
+        SavePostsThread(List<PostModel> postModels) {
             this.postModelList = postModels;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        public void run() {
             dbHelper.saveNextPosts(this.postModelList, filter);
-            return null;
         }
     }
 }
