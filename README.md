@@ -224,6 +224,36 @@ Serializable y emplear los métodos putExtra(String name, Serializable value) y 
 getSerializableExtra(String name) de la clase android.content.Intent
 
 
+## Final Assignment
+
+### Objetivos
+
+* Integrar todos los conocimientos aprehendidos durante el curso
+* Incorporar nuevos componentes sin conocimiento previo
+* Reutilizar código
+
+### Enunciado
+
+* Implementar **una sola** de las siguientes características:
+ 1. Desplegar los comentarios empleando un scroll infinito de a 50 noticias
+ (no hace falta persistirlo). Considerar incorporar una sangria o algo que indique el nivel del subarbol
+ 2. Emplear un [TabHost](https://developer.android.com/reference/android/widget/TabHost.html) o
+ [NavigationDrawer](https://developer.android.com/training/implementing-navigation/nav-drawer.html?hl=es-419)
+  que muestre los siguientes tipos de noticias: _hot_, _new_ y _top_
+ 3. Implementar login/logout del usuario y permitir hacer un _upVote_ o _downVote_ de un post ya
+ sea de la lista general o desde el detalle de un post
+
+
+## Criterios de evaluación
+
+* Funcionalidad adecuada
+* Reutilización de código
+* Tolerancia a errores
+* Nivel de acoplamiento y cohesión de los componentes
+* Haber contemplado las correcciones las observaciones realizadas en la evaluación de cada actividad práctica
+* Características/Funcionalidades adicionales incorporadas en la aplicación si las hubiese
+
+
 ## Condiciones generales de entrega
 
 * **No deben emplearse frameworks que no sean los provistos oficialmente por la SDK de Android**
