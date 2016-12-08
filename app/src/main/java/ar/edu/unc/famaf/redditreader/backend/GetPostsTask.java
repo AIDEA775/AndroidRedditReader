@@ -29,7 +29,7 @@ class GetPostsTask extends AsyncTask<String, Void, Listing> {
     @Override
     protected Listing doInBackground(String... params) {
         try {
-            Log.i("GetTopPost", "Connecting to reddit.com");
+            Log.i("GetPostsTask", "Connecting to reddit.com");
             HttpURLConnection conn = (HttpURLConnection)
                     new URL(String.format(Locale.US,
                             "https://www.reddit.com/%s/.json?limit=50&after=%s",
@@ -37,7 +37,7 @@ class GetPostsTask extends AsyncTask<String, Void, Listing> {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Host", "www.reddit.com");
 
-            Log.i("GetTopPost", "Code " + String.valueOf(conn.getResponseCode()));
+            Log.i("GetPostsTask", "Code " + String.valueOf(conn.getResponseCode()));
 
             InputStream in = new BufferedInputStream(conn.getInputStream());
 

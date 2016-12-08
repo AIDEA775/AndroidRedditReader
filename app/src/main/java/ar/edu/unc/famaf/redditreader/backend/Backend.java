@@ -15,8 +15,8 @@ public class Backend implements GetPostsTask.GetPostsListener {
     private static RedditDBHelper dbHelper;
     private static boolean clear = true;
 
-    private Context context;
     private PostsIteratorListener listener;
+    private Context context;
     private String filter;
 
     private List<PostModel> postsList = null;

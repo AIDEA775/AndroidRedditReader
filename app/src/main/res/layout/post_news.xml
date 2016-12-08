@@ -13,7 +13,9 @@
     <RelativeLayout
         android:id="@+id/image_layout"
         android:layout_width="64dp"
-        android:layout_height="64dp">
+        android:layout_height="64dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp">
 
         <ImageView
             android:layout_width="match_parent"
@@ -39,81 +41,74 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        tools:text="r/todayilearnerd/"
+        android:id="@+id/post_item_subreddit"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/post_item_created_utc"
+        android:layout_toStartOf="@+id/post_item_created_utc"
+        android:layout_toRightOf="@+id/image_layout"
+        android:layout_toEndOf="@+id/image_layout" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        tools:text="Hace 4h"
+        android:id="@+id/post_item_created_utc"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/post_browser"
+        android:layout_toStartOf="@+id/post_browser" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec"
+        android:id="@+id/post_item_title"
+        android:layout_below="@+id/post_item_subreddit"
+        android:layout_toLeftOf="@+id/post_browser"
+        android:layout_toStartOf="@+id/post_browser"
+        android:layout_toRightOf="@+id/image_layout"
+        android:layout_toEndOf="@+id/image_layout" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:gravity="start|center"
+        android:id="@+id/post_item_comments"
+        android:drawableLeft="@drawable/ic_question_answer"
+        android:drawableStart="@drawable/ic_question_answer"
+        android:background="?android:selectableItemBackground"
+        android:drawablePadding="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        tools:text="2112 comentarios"
+        tools:contentDescription="Coment"
+        android:layout_below="@+id/post_item_title"
+        android:layout_toRightOf="@+id/image_layout"
+        android:layout_toEndOf="@+id/image_layout"
+        android:layout_toLeftOf="@+id/post_browser"
+        android:layout_toStartOf="@+id/post_browser"/>
 
     <ImageButton
         android:layout_width="32dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:id="@+id/post_browser"
         android:src="@drawable/ic_arrow_right"
         android:background="?android:selectableItemBackground"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/post_layout"
+        android:layout_alignBottom="@+id/post_item_comments"
         android:contentDescription="@string/post_arrow_info"/>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingRight="8dp"
-        android:paddingLeft="8dp"
-        android:layout_alignParentTop="true"
-        android:id="@+id/post_layout"
-        android:layout_toLeftOf="@+id/post_browser"
-        android:layout_toStartOf="@+id/post_browser"
-        android:layout_toRightOf="@+id/image_layout"
-        android:layout_toEndOf="@+id/image_layout">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            tools:text="r/todayilearnerd"
-            android:id="@+id/post_item_subreddit"
-            android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/post_item_title"
-            android:layout_alignStart="@+id/post_item_title"
-            android:layout_toLeftOf="@+id/post_item_created_utc"
-            android:layout_toStartOf="@+id/post_item_created_utc" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec"
-            android:id="@+id/post_item_title"
-            android:layout_below="@+id/post_item_subreddit"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:gravity="start|center"
-            android:id="@+id/post_item_comments"
-            android:drawableLeft="@drawable/ic_question_answer"
-            android:drawableStart="@drawable/ic_question_answer"
-            android:background="?android:selectableItemBackground"
-            android:drawablePadding="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            tools:text="2112 comentarios"
-            tools:contentDescription="Coment"
-            android:layout_below="@+id/post_item_title" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            tools:text="Hace 4h"
-            android:id="@+id/post_item_created_utc"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-    </RelativeLayout>
 
 </RelativeLayout>
