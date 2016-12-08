@@ -20,8 +20,16 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 public class RedditDBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "Posts.db";
+    private static RedditDBHelper instance;
 
-    public RedditDBHelper(Context context) {
+    public static synchronized RedditDBHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new RedditDBHelper(context.getApplicationContext());
+        }
+        return instance;
+    }
+
+    private RedditDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -68,7 +76,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
         }
 
         c.close();
-        sqLiteDatabase.close();
+        // Don't close sqLiteDatabase for thread-safely
         return list;
     }
 
@@ -91,7 +99,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
     void clearPosts() {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.delete(PostEntry.TABLE_NAME, null, null);
-        sqLiteDatabase.close();
+        // Don't close sqLiteDatabase for thread-safely
     }
 
     void saveNextPosts(List<PostModel> postModelsList, String filter){
@@ -105,7 +113,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
                     SQLiteDatabase.CONFLICT_IGNORE);
         }
 
-        sqLiteDatabase.close();
+        // Don't close sqLiteDatabase for thread-safely
     }
 
     private ContentValues postToContentValues(PostModel post, String filter) {
@@ -137,7 +145,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
                 PostEntry.THUMBNAIL + "=?",
                 new String[]{key});
 
-        sqLiteDatabase.close();
+        // Don't close sqLiteDatabase for thread-safely
     }
 
     public Bitmap getThumbnailBitmap(String key) {
@@ -158,7 +166,7 @@ public class RedditDBHelper extends SQLiteOpenHelper {
         }
 
         c.close();
-        sqLiteDatabase.close();
+        // Don't close sqLiteDatabase for thread-safely
         return bitmap;
     }
 

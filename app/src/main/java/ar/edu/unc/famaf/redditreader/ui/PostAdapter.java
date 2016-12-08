@@ -162,7 +162,7 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
 
         LoadThumbnailTask(Context context, ImageView view, ProgressBar bar) {
             super(view, bar);
-            this.dbHelper = new RedditDBHelper(context);
+            this.dbHelper = RedditDBHelper.getInstance(context);
         }
 
         @Override
@@ -177,17 +177,6 @@ public class PostAdapter extends ArrayAdapter<PostModel>{
             }
             addBitmapToCache(params[0], thumbnail);
             return thumbnail;
-        }
-
-        @Override
-        protected void onCancelled() {
-            dbHelper.close();
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap param) {
-            super.onPostExecute(param);
-            dbHelper.close();
         }
     }
 }

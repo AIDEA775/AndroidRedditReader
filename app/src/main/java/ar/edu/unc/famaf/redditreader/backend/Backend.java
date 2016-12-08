@@ -12,9 +12,9 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
 public class Backend implements GetPostsTask.GetPostsListener {
-    private static RedditDBHelper dbHelper;
     private static boolean clear = true;
 
+    private RedditDBHelper dbHelper;
     private PostsIteratorListener listener;
     private Context context;
     private String filter;
@@ -31,9 +31,7 @@ public class Backend implements GetPostsTask.GetPostsListener {
         this.context = context;
         this.listener = listener;
         this.filter = filter;
-
-        if (dbHelper == null)
-            dbHelper = new RedditDBHelper(context);
+        this.dbHelper = RedditDBHelper.getInstance(context);
     }
 
     public void reloadPosts() {
